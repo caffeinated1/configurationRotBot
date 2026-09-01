@@ -1,0 +1,265 @@
+{
+  "_comment": "End-of-life dates for runtimes, base images and major frameworks. Dates are the vendor's stated end of security support. This file is a bundled snapshot so that scans work offline; run scripts/refresh_data.py to replace it with live data from endoflife.date. Anything with a date in the future is a projection from the vendor's published support policy and should be re-verified before being relied on.",
+  "_updated": "2026-09-01",
+  "_source": "https://endoflife.date",
+  "cycles": {
+    "node": {
+      "url": "https://endoflife.date/nodejs",
+      "lts_even_majors_only": true,
+      "eol": {
+        "10": "2021-04-30",
+        "12": "2022-04-30",
+        "14": "2023-04-30",
+        "16": "2023-09-11",
+        "17": "2022-06-01",
+        "18": "2025-04-30",
+        "19": "2023-06-01",
+        "20": "2026-04-30",
+        "21": "2024-06-01",
+        "22": "2027-04-30",
+        "23": "2025-06-01",
+        "24": "2028-04-30"
+      }
+    },
+    "python": {
+      "url": "https://endoflife.date/python",
+      "eol": {
+        "2.7": "2020-01-01",
+        "3.5": "2020-09-30",
+        "3.6": "2021-12-23",
+        "3.7": "2023-06-27",
+        "3.8": "2024-10-07",
+        "3.9": "2025-10-31",
+        "3.10": "2026-10-31",
+        "3.11": "2027-10-31",
+        "3.12": "2028-10-31",
+        "3.13": "2029-10-31",
+        "3.14": "2030-10-31"
+      }
+    },
+    "go": {
+      "url": "https://endoflife.date/go",
+      "_policy": "Go supports only the two most recent major releases; a version goes EOL when N+2 ships.",
+      "eol": {
+        "1.18": "2023-02-01",
+        "1.19": "2023-08-08",
+        "1.20": "2024-02-06",
+        "1.21": "2024-08-13",
+        "1.22": "2025-02-11",
+        "1.23": "2025-08-12",
+        "1.24": "2026-02-10",
+        "1.25": "2026-08-01",
+        "1.26": "2027-02-01",
+        "1.27": "2027-08-01"
+      }
+    },
+    "ruby": {
+      "url": "https://endoflife.date/ruby",
+      "eol": {
+        "2.6": "2022-04-12",
+        "2.7": "2023-03-31",
+        "3.0": "2024-04-23",
+        "3.1": "2025-03-31",
+        "3.2": "2026-03-31",
+        "3.3": "2027-03-31"
+      }
+    },
+    "php": {
+      "url": "https://endoflife.date/php",
+      "eol": {
+        "7.2": "2020-11-30",
+        "7.3": "2021-12-06",
+        "7.4": "2022-11-28",
+        "8.0": "2023-11-26",
+        "8.1": "2025-12-31",
+        "8.2": "2026-12-31",
+        "8.3": "2027-12-31",
+        "8.4": "2028-12-31"
+      }
+    },
+    "java": {
+      "url": "https://endoflife.date/oracle-jdk",
+      "_policy": "Only LTS releases (8, 11, 17, 21, 25) receive long-term updates; non-LTS releases are supported for six months.",
+      "eol": {
+        "8": "2030-12-31",
+        "9": "2018-03-20",
+        "10": "2018-09-30",
+        "11": "2032-01-31",
+        "12": "2019-09-30",
+        "13": "2020-03-31",
+        "14": "2020-09-30",
+        "15": "2021-03-31",
+        "16": "2021-09-30",
+        "17": "2029-09-30",
+        "18": "2022-09-30",
+        "19": "2023-03-31",
+        "20": "2023-09-30",
+        "21": "2031-09-30"
+      }
+    },
+    "dotnet": {
+      "url": "https://endoflife.date/dotnet",
+      "eol": {
+        "3.1": "2022-12-13",
+        "5.0": "2022-05-10",
+        "6.0": "2024-11-12",
+        "7.0": "2024-05-14",
+        "8.0": "2026-11-10",
+        "9.0": "2026-05-12"
+      }
+    },
+    "alpine": {
+      "url": "https://endoflife.date/alpine",
+      "eol": {
+        "3.14": "2023-05-01",
+        "3.15": "2023-11-01",
+        "3.16": "2024-05-23",
+        "3.17": "2024-11-22",
+        "3.18": "2025-05-09",
+        "3.19": "2025-11-01",
+        "3.20": "2026-04-01",
+        "3.21": "2026-11-01"
+      }
+    },
+    "debian": {
+      "url": "https://endoflife.date/debian",
+      "eol": {
+        "9": "2022-06-30",
+        "stretch": "2022-06-30",
+        "10": "2024-06-30",
+        "buster": "2024-06-30",
+        "11": "2026-08-31",
+        "bullseye": "2026-08-31",
+        "12": "2028-06-30",
+        "bookworm": "2028-06-30"
+      }
+    },
+    "ubuntu": {
+      "url": "https://endoflife.date/ubuntu",
+      "eol": {
+        "16.04": "2021-04-30",
+        "18.04": "2023-05-31",
+        "20.04": "2025-05-29",
+        "22.04": "2027-06-01",
+        "24.04": "2029-05-31"
+      }
+    },
+    "django": {
+      "url": "https://endoflife.date/django",
+      "ecosystem": "python",
+      "eol": {
+        "2.2": "2022-04-11",
+        "3.2": "2024-04-01",
+        "4.0": "2023-04-01",
+        "4.1": "2023-12-01",
+        "4.2": "2026-04-01",
+        "5.0": "2025-04-01",
+        "5.1": "2025-12-01",
+        "5.2": "2028-04-01"
+      }
+    },
+    "rails": {
+      "url": "https://endoflife.date/rails",
+      "ecosystem": "ruby",
+      "eol": {
+        "5.2": "2022-06-01",
+        "6.0": "2023-06-01",
+        "6.1": "2024-10-01",
+        "7.0": "2025-10-01",
+        "7.1": "2026-10-01"
+      }
+    }
+  },
+  "github_runners": {
+    "_comment": "GitHub-hosted runner labels that are removed or scheduled for removal. A workflow pinned to a removed label fails outright rather than degrading.",
+    "ubuntu-16.04": {
+      "status": "removed",
+      "date": "2021-09-20",
+      "replacement": "ubuntu-latest"
+    },
+    "ubuntu-18.04": {
+      "status": "removed",
+      "date": "2022-12-01",
+      "replacement": "ubuntu-latest"
+    },
+    "ubuntu-20.04": {
+      "status": "removed",
+      "date": "2025-04-15",
+      "replacement": "ubuntu-24.04"
+    },
+    "macos-11": {
+      "status": "removed",
+      "date": "2024-06-28",
+      "replacement": "macos-latest"
+    },
+    "macos-12": {
+      "status": "removed",
+      "date": "2024-12-03",
+      "replacement": "macos-latest"
+    },
+    "windows-2019": {
+      "status": "deprecated",
+      "date": "2025-06-30",
+      "replacement": "windows-2022"
+    }
+  },
+  "github_actions": {
+    "_comment": "Minimum non-deprecated major version for widely used actions. Versions below these run on retired Node runtimes or emit deprecation warnings that become hard failures.",
+    "actions/checkout": {
+      "min_major": 4,
+      "reason": "v1-v3 run on deprecated Node runtimes"
+    },
+    "actions/setup-node": {
+      "min_major": 4,
+      "reason": "v1-v3 run on deprecated Node runtimes"
+    },
+    "actions/setup-python": {
+      "min_major": 5,
+      "reason": "v1-v4 run on deprecated Node runtimes"
+    },
+    "actions/setup-go": {
+      "min_major": 5,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "actions/setup-java": {
+      "min_major": 4,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "actions/cache": {
+      "min_major": 4,
+      "reason": "v1-v3 run on deprecated Node runtimes; v3 service backend retired"
+    },
+    "actions/upload-artifact": {
+      "min_major": 4,
+      "reason": "v3 artifact backend retired 2025-01-30"
+    },
+    "actions/download-artifact": {
+      "min_major": 4,
+      "reason": "v3 artifact backend retired 2025-01-30"
+    },
+    "actions/github-script": {
+      "min_major": 7,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "docker/build-push-action": {
+      "min_major": 6,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "docker/setup-buildx-action": {
+      "min_major": 3,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "docker/login-action": {
+      "min_major": 3,
+      "reason": "older majors run on deprecated Node runtimes"
+    },
+    "codecov/codecov-action": {
+      "min_major": 4,
+      "reason": "v3 uses the retired bash uploader"
+    },
+    "peter-evans/create-pull-request": {
+      "min_major": 6,
+      "reason": "older majors run on deprecated Node runtimes"
+    }
+  }
+}

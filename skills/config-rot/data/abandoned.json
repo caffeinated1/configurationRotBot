@@ -1,0 +1,198 @@
+{
+  "_comment": "Flat lookup of packages whose upstream is archived, deprecated, or dormant. Kept separate from rules.json because it needs no conditions \u2014 presence is the whole test \u2014 so contributors can add an entry in one line. `status` drives severity: archived/deprecated are HAZARD, dormant is STAGNATION.",
+  "_updated": "2026-09-01",
+  "packages": {
+    "node": {
+      "left-pad": {
+        "status": "dormant",
+        "replacement": "String.prototype.padStart"
+      },
+      "istanbul": {
+        "status": "deprecated",
+        "replacement": "nyc or c8"
+      },
+      "gulp-util": {
+        "status": "deprecated",
+        "replacement": "individual utility packages"
+      },
+      "core-js@2": {
+        "status": "deprecated",
+        "replacement": "core-js@3"
+      },
+      "eslint-loader": {
+        "status": "deprecated",
+        "replacement": "eslint-webpack-plugin"
+      },
+      "tslint-config-prettier": {
+        "status": "deprecated",
+        "replacement": "eslint-config-prettier"
+      },
+      "react-router-dom@5": {
+        "status": "dormant",
+        "replacement": "react-router-dom@6+"
+      },
+      "popper.js": {
+        "status": "deprecated",
+        "replacement": "@popperjs/core"
+      },
+      "querystring": {
+        "status": "deprecated",
+        "replacement": "URLSearchParams"
+      },
+      "har-validator": {
+        "status": "deprecated",
+        "replacement": "none needed"
+      },
+      "uuid@3": {
+        "status": "deprecated",
+        "replacement": "uuid@9+ or crypto.randomUUID()"
+      },
+      "chokidar@2": {
+        "status": "deprecated",
+        "replacement": "chokidar@3+"
+      },
+      "fsevents@1": {
+        "status": "deprecated",
+        "replacement": "fsevents@2"
+      },
+      "phantomjs": {
+        "status": "deprecated",
+        "replacement": "Playwright or headless Chrome"
+      },
+      "phantomjs-prebuilt": {
+        "status": "deprecated",
+        "replacement": "Playwright"
+      },
+      "grunt": {
+        "status": "dormant",
+        "replacement": "npm scripts + a modern bundler"
+      },
+      "tsc-watch": {
+        "status": "dormant",
+        "replacement": "tsc --watch or tsx"
+      },
+      "ts-node": {
+        "status": "dormant",
+        "replacement": "tsx or node --experimental-strip-types"
+      },
+      "cross-env": {
+        "status": "dormant",
+        "replacement": "native env syntax on modern Node/npm"
+      },
+      "npm-run-all": {
+        "status": "dormant",
+        "replacement": "npm-run-all2 or a task runner"
+      },
+      "lodash.isequal": {
+        "status": "deprecated",
+        "replacement": "structuredClone comparison or node:util.isDeepStrictEqual"
+      }
+    },
+    "python": {
+      "nose2": {
+        "status": "dormant",
+        "replacement": "pytest"
+      },
+      "python-dateutil": {
+        "status": "active",
+        "replacement": null
+      },
+      "pycrypto": {
+        "status": "deprecated",
+        "since": "2013",
+        "replacement": "cryptography or pycryptodome"
+      },
+      "distribute": {
+        "status": "deprecated",
+        "replacement": "setuptools"
+      },
+      "imp": {
+        "status": "deprecated",
+        "replacement": "importlib"
+      },
+      "pytz": {
+        "status": "dormant",
+        "replacement": "zoneinfo (stdlib, Python 3.9+)"
+      },
+      "pipenv": {
+        "status": "dormant",
+        "replacement": "uv, poetry, or pip-tools"
+      },
+      "flake8": {
+        "status": "active",
+        "replacement": "ruff (faster, consolidates several tools)"
+      },
+      "yapf": {
+        "status": "dormant",
+        "replacement": "ruff format or black"
+      },
+      "safety": {
+        "status": "active",
+        "replacement": null
+      },
+      "raven": {
+        "status": "deprecated",
+        "replacement": "sentry-sdk"
+      },
+      "boto": {
+        "status": "deprecated",
+        "replacement": "boto3"
+      },
+      "unittest2": {
+        "status": "deprecated",
+        "replacement": "unittest (stdlib)"
+      }
+    },
+    "ruby": {
+      "therubyracer": {
+        "status": "deprecated",
+        "replacement": "mini_racer or node"
+      },
+      "protected_attributes": {
+        "status": "deprecated",
+        "replacement": "strong parameters"
+      },
+      "paperclip": {
+        "status": "deprecated",
+        "since": "2018",
+        "replacement": "ActiveStorage or Shrine"
+      }
+    },
+    "go": {
+      "github.com/golang/dep": {
+        "status": "deprecated",
+        "replacement": "Go modules"
+      },
+      "github.com/pkg/errors": {
+        "status": "dormant",
+        "replacement": "errors.Is / errors.As / fmt.Errorf %w"
+      },
+      "github.com/dgrijalva/jwt-go": {
+        "status": "deprecated",
+        "replacement": "github.com/golang-jwt/jwt/v5"
+      },
+      "io/ioutil": {
+        "status": "deprecated",
+        "replacement": "io and os package equivalents"
+      }
+    },
+    "rust": {
+      "rustc-serialize": {
+        "status": "deprecated",
+        "replacement": "serde"
+      },
+      "error-chain": {
+        "status": "dormant",
+        "replacement": "thiserror or anyhow"
+      },
+      "failure": {
+        "status": "deprecated",
+        "replacement": "thiserror or anyhow"
+      },
+      "time@0.1": {
+        "status": "deprecated",
+        "replacement": "time 0.3 or chrono"
+      }
+    }
+  }
+}

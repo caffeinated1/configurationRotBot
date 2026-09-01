@@ -1,0 +1,136 @@
+# Tier 1 — the scheduled agent. This is what "live agent" means here.
+#
+# Copy to .github/workflows/config-rot-agent.yml in your repository, and add
+# ANTHROPIC_API_KEY to the repository secrets.
+#
+# Once a week the agent scans, picks the highest-value work it can complete and
+# verify, makes the change, runs your own build and tests, and opens a pull
+# request. GitHub is the scheduler, the compute, the audit log and the review
+# UI — there is no service to run and nothing to trust with standing access to
+# your code beyond what you already trust Actions with.
+#
+# Before enabling, add a CONFIGROT.md at your repository root. Without it the
+# agent has no way to know your constraints, and the first PR will propose
+# something your team already decided against. Start from
+# skills/config-rot/assets/CONFIGROT.template.md.
+#
+# For Tier 2 (the continuous keeper), keep this workflow and set `mode: keeper`
+# plus `auto_merge: [safe]` in CONFIGROT.md. The budget below is what stops an
+# autonomous agent from flooding the repo — a maintenance bot that opens
+# fifteen PRs gets muted, and a muted bot is worse than none because everyone
+# assumes it is covering the problem.
+
+name: Configuration rot agent
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"      # Mondays, 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      focus:
+        description: "Optional: restrict to one category (DECAY, DIVERGENCE, ...)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: config-rot-agent
+  cancel-in-progress: false
+
+jobs:
+  budget:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          max=$(grep -oP '^max_open_prs:\s*\K\d+' CONFIGROT.md 2>/dev/null || echo 3)
+          open=$(gh pr list --label config-rot --state open --json number --jq 'length')
+          echo "open config-rot PRs: $open / $max"
+          if (( open >= max )); then
+            echo "Budget reached. Review the open PRs before the agent opens more."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  remediate:
+    needs: budget
+    if: needs.budget.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install the config-rot skill
+        run: |
+          set -euo pipefail
+          mkdir -p .claude/skills
+          git clone --depth 1 https://github.com/caffeinated1/configurationRotBot \
+            /tmp/configrotbot
+          cp -r /tmp/configrotbot/skills/config-rot .claude/skills/
+
+      # Set up whatever your project needs in order to be *verified*. The agent
+      # runs your build and tests before and after every change and reverts
+      # anything that turns them red, so this step is what makes the whole
+      # thing safe. An agent that cannot verify can only guess.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      - run: npm ci
+
+      - name: Scan
+        run: |
+          python3 .claude/skills/config-rot/scripts/scan.py \
+            --repo . --json findings.json --online --format summary
+
+      - name: Remediate
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Use the config-rot skill to address configuration rot in this repository.
+
+            findings.json from this run is already at the repo root — read it
+            rather than re-scanning. Read CONFIGROT.md in full before proposing
+            anything; both its front matter and its prose constraints are binding.
+
+            ${{ inputs.focus && format('Restrict yourself to {0} findings.', inputs.focus) || '' }}
+
+            Scope for this run: pick the single highest-value change you can
+            complete AND verify. One class of change only. It is much better to
+            land one verified fix a week than to open a sprawling PR that never
+            gets reviewed.
+
+            Before you finish:
+            - Run the repo's own verify commands and confirm nothing regressed
+              against the baseline you took before editing.
+            - Revert anything you could not verify, and record why in
+              .configrot/state.json so the next run does not retry it.
+            - Write ROT-REPORT.md.
+
+            Then open a pull request. Title it for the change, not the tool
+            ("Migrate ESLint to flat config", not "config-rot: weekly run").
+            In the body, say what changed, which findings it resolves, how you
+            verified it, and anything you attempted and reverted.
+            Apply the `config-rot` label.
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-report
+          path: |
+            ROT-REPORT.md
+            findings.json
+          retention-days: 90

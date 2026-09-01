@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the floor: the scanner falls back to a hand-rolled TOML reader
+        # below 3.11, and that path needs exercising on every change.
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Assert the scanner has no third-party imports
+        run: python3 tests/test_stdlib_only.py
+
+      - name: Scanner tests
+        run: python3 tests/test_scan.py
+
+      - name: Dataset schema tests
+        run: python3 tests/test_rules.py
+
+      - name: Installer tests
+        run: python3 tests/test_install.py
+
+  self-scan:
+    name: Scan this repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configuration rot scan
+        uses: ./
+        with:
+          fail-on: high
+
+  install:
+    name: Installer works end to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install from this commit into a scratch project
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/scratch && cd /tmp/scratch
+          printf '%s\n' '{"name":"t","engines":{"node":">=14"}}' > package.json
+          sh "$GITHUB_WORKSPACE/install.sh" --ref "$GITHUB_SHA"
+          test -f .claude/skills/config-rot/SKILL.md
+          test -f .claude/skills/config-rot/scripts/scan.py
+          test -f CONFIGROT.md
+
+      - name: Re-running the installer keeps an edited policy
+        run: |
+          set -euo pipefail
+          cd /tmp/scratch
+          echo "- A real constraint the user added." >> CONFIGROT.md
+          sh "$GITHUB_WORKSPACE/install.sh" --ref "$GITHUB_SHA" --no-scan
+          grep -q "A real constraint the user added." CONFIGROT.md
+
+      - name: Uninstall removes the skill and leaves the policy
+        run: |
+          set -euo pipefail
+          cd /tmp/scratch
+          sh "$GITHUB_WORKSPACE/install.sh" --uninstall
+          test ! -d .claude/skills/config-rot
+          test -f CONFIGROT.md
+
+  fixture:
+    name: Fixture still exercises every detector
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan the deliberately rotten fixture
+        run: |
+          python3 skills/config-rot/scripts/scan.py \
+            --repo examples/rotten-repo --format markdown --no-state --exit-zero \
+            >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,108 @@
+name: "Configuration Rot Scan"
+description: >-
+  Scan a repository for configuration rot — EOL runtimes, deprecated config
+  formats, contradictory version declarations, dead tooling config, and
+  abandoned packages. Read-only; needs no API key.
+author: "configurationRotBot contributors"
+branding:
+  icon: "alert-triangle"
+  color: "orange"
+
+inputs:
+  path:
+    description: "Directory to scan, relative to the workspace."
+    required: false
+    default: "."
+  online:
+    description: >-
+      Also check registries for version drift and run the ecosystem's native
+      audit tool. Slower, and needs network egress.
+    required: false
+    default: "false"
+  fail-on:
+    description: >-
+      Fail the job when a finding at this severity or worse is present:
+      critical, high, medium, low, or never. Start at `never` while you triage
+      the backlog, then ratchet it down — a gate that blocks a team on day one
+      gets removed on day two.
+    required: false
+    default: "never"
+  report-path:
+    description: "Where to write the Markdown report."
+    required: false
+    default: "ROT-REPORT.md"
+  json-path:
+    description: "Where to write findings.json."
+    required: false
+    default: "findings.json"
+  summary:
+    description: "Write the report to the GitHub Actions job summary."
+    required: false
+    default: "true"
+
+outputs:
+  rot-index:
+    description: "Overall rot index, 0-100 (lower is better)."
+    value: ${{ steps.scan.outputs.rot-index }}
+  finding-count:
+    description: "Number of findings reported."
+    value: ${{ steps.scan.outputs.finding-count }}
+  worst-severity:
+    description: "Highest severity present, or `none`."
+    value: ${{ steps.scan.outputs.worst-severity }}
+  report-path:
+    description: "Path to the generated Markdown report."
+    value: ${{ steps.scan.outputs.report-path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Run configuration rot scan
+      id: scan
+      shell: bash
+      env:
+        CR_PATH: ${{ inputs.path }}
+        CR_ONLINE: ${{ inputs.online }}
+        CR_FAIL_ON: ${{ inputs.fail-on }}
+        CR_REPORT: ${{ inputs.report-path }}
+        CR_JSON: ${{ inputs.json-path }}
+        CR_SUMMARY: ${{ inputs.summary }}
+        CR_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+
+        args=(--repo "$CR_PATH" --json "$CR_JSON" --format markdown --exit-zero)
+        [[ "$CR_ONLINE" == "true" ]] && args+=(--online)
+
+        python3 "$CR_ACTION_PATH/skills/config-rot/scripts/scan.py" "${args[@]}" \
+          > "$CR_REPORT"
+
+        # Read the machine-readable output rather than parsing the report.
+        # A heredoc would not survive this YAML block's indentation, so the
+        # extraction lives in a script next to the scanner.
+        python3 "$CR_ACTION_PATH/skills/config-rot/scripts/gh_outputs.py" \
+          "$CR_JSON" >> "$GITHUB_OUTPUT"
+        echo "report-path=$CR_REPORT" >> "$GITHUB_OUTPUT"
+
+        ROT_INDEX=$(grep '^rot-index=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+        FINDING_COUNT=$(grep '^finding-count=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+        WORST=$(grep '^worst-severity=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+
+        if [[ "$CR_SUMMARY" == "true" ]]; then
+          cat "$CR_REPORT" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        echo "Rot index $ROT_INDEX/100 · $FINDING_COUNT findings · worst: $WORST"
+
+        if [[ "$CR_FAIL_ON" != "never" ]]; then
+          declare -A rank=([critical]=4 [high]=3 [medium]=2 [low]=1 [none]=0 [info]=0)
+          if (( ${rank[$WORST]} >= ${rank[$CR_FAIL_ON]} )); then
+            echo "::error::Configuration rot at or above '$CR_FAIL_ON' (worst: $WORST)"
+            exit 1
+          fi
+        fi

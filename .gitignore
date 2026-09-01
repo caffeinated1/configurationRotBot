@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.configrot/
+ROT-REPORT.md
+findings.json
+.DS_Store
