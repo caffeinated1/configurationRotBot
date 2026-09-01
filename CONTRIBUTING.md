@@ -25,9 +25,7 @@ There isn't one. Python 3.9+ and a clone.
 ```bash
 git clone https://github.com/caffeinated1/configurationRotBot
 cd configurationRotBot
-python3 tests/test_scan.py
-python3 tests/test_rules.py
-python3 tests/test_stdlib_only.py
+for t in tests/test_*.py; do python3 "$t" || break; done
 ```
 
 ## The invariants
@@ -115,7 +113,7 @@ out.
 
 - One concern per PR. The project's own advice about reviewable diffs applies to
   the project.
-- Run the three test files before pushing.
+- Run the test suite before pushing.
 - New behaviour needs a test. New rules need a fixture.
 - Say what you verified, not just what you changed.
 

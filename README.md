@@ -71,9 +71,22 @@ nearly free to detect and almost always a real latent bug. STAGNATION is where
 ### As a Claude Code skill (no infrastructure)
 
 ```bash
-mkdir -p .claude/skills
+curl -fsSL https://raw.githubusercontent.com/caffeinated1/configurationRotBot/v1/install.sh | sh
+```
+
+Installs the skill into `.claude/skills/`, writes an empty starter
+`CONFIGROT.md`, and runs a first scan. Needs Python 3.9+ and nothing else — no
+sudo, no writes outside the target directory. Re-run it to update; it leaves an
+edited policy alone. `--uninstall` reverses it.
+
+Reading a script before piping it into a shell is a good habit, and
+[`install.sh`](install.sh) is written to be read.
+
+Prefer to do it by hand:
+
+```bash
 git clone --depth 1 https://github.com/caffeinated1/configurationRotBot /tmp/crb
-cp -r /tmp/crb/skills/config-rot .claude/skills/
+mkdir -p .claude/skills && cp -r /tmp/crb/skills/config-rot .claude/skills/
 ```
 
 Then ask Claude Code:
@@ -258,7 +271,8 @@ skills/config-rot/
   assets/                        report and policy templates
 templates/                       copy-paste workflows for Tier 0.5 and Tier 1
 examples/rotten-repo/            deliberately rotten fixture
-tests/                           46 tests, standard library only
+tests/                           62 tests, standard library only
+install.sh                       one-command installer
 action.yml                       the composite GitHub Action
 ```
 
@@ -291,7 +305,7 @@ for the condition grammar, and [`CONTRIBUTING.md`](CONTRIBUTING.md) for
 everything else.
 
 ```bash
-python3 tests/test_scan.py && python3 tests/test_rules.py && python3 tests/test_stdlib_only.py
+for t in tests/test_*.py; do python3 "$t" || break; done
 ```
 
 ## Status

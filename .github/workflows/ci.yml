@@ -34,6 +34,9 @@ jobs:
       - name: Dataset schema tests
         run: python3 tests/test_rules.py
 
+      - name: Installer tests
+        run: python3 tests/test_install.py
+
   self-scan:
     name: Scan this repository
     runs-on: ubuntu-latest
@@ -43,6 +46,38 @@ jobs:
         uses: ./
         with:
           fail-on: high
+
+  install:
+    name: Installer works end to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install from this commit into a scratch project
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/scratch && cd /tmp/scratch
+          printf '%s\n' '{"name":"t","engines":{"node":">=14"}}' > package.json
+          sh "$GITHUB_WORKSPACE/install.sh" --ref "$GITHUB_SHA"
+          test -f .claude/skills/config-rot/SKILL.md
+          test -f .claude/skills/config-rot/scripts/scan.py
+          test -f CONFIGROT.md
+
+      - name: Re-running the installer keeps an edited policy
+        run: |
+          set -euo pipefail
+          cd /tmp/scratch
+          echo "- A real constraint the user added." >> CONFIGROT.md
+          sh "$GITHUB_WORKSPACE/install.sh" --ref "$GITHUB_SHA" --no-scan
+          grep -q "A real constraint the user added." CONFIGROT.md
+
+      - name: Uninstall removes the skill and leaves the policy
+        run: |
+          set -euo pipefail
+          cd /tmp/scratch
+          sh "$GITHUB_WORKSPACE/install.sh" --uninstall
+          test ! -d .claude/skills/config-rot
+          test -f CONFIGROT.md
 
   fixture:
     name: Fixture still exercises every detector
