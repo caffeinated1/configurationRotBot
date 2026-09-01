@@ -71,7 +71,7 @@ nearly free to detect and almost always a real latent bug. STAGNATION is where
 ### As a Claude Code skill (no infrastructure)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/caffeinated1/configurationRotBot/v1/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/caffeinated1/configurationRotBot/main/install.sh | sh
 ```
 
 Installs the skill into `.claude/skills/`, writes an empty starter
@@ -123,7 +123,7 @@ Exit code encodes the worst severity found (0 none · 1 low · 2 medium · 3 hig
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: caffeinated1/configurationRotBot@v1
+- uses: caffeinated1/configurationRotBot@main   # pin to a tag once one is cut
   with:
     online: true
     fail-on: never   # then ratchet: critical → high → medium
@@ -310,9 +310,15 @@ for t in tests/test_*.py; do python3 "$t" || break; done
 
 ## Status
 
-**v0.1.** Node, Python, Go, Rust, Docker and GitHub Actions coverage; Tiers 0
-and 1. Next up: JVM, Ruby and PHP detectors, the Tier 2 keeper, and Terraform
-and Kubernetes. Roadmap and open design questions are in
+**v1.0.0** — merged and CI-green. Node, Python, Go, Rust, Docker and GitHub
+Actions coverage; Tiers 0 through 2.
+
+Release tags are not yet pushed, so examples above reference `main`. Once `v1`
+and `v1.0.0` exist, pin to them instead. See [CHANGELOG.md](CHANGELOG.md) for
+what is in this release and, just as importantly, what is not.
+
+Next up: JVM, Ruby and PHP detectors, per-workspace monorepo scoring, and
+Terraform and Kubernetes. Roadmap and open design questions are in
 [SPEC.md](SPEC.md#8-roadmap).
 
 ## License
