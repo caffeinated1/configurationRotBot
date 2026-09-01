@@ -1,0 +1,900 @@
+{
+  "_comment": "Declarative rot rules. Deprecation patterns move faster than any code release, so they live here as data: a contributor who knows that a tool changed its config format can open a five-line PR without reading any Python. See references/writing-rules.md for the condition grammar. A rule may declare `covers`: packages it fully explains, which the abandoned-package detector then leaves alone so a dependency is reported once.",
+  "_schema": "1.0",
+  "_updated": "2026-09-01",
+  "rules": [
+    {
+      "id": "STAGNATION.eslint-flat-config",
+      "category": "STAGNATION",
+      "severity": "high",
+      "when": {
+        "dependency": {
+          "name": "eslint",
+          "version_gte": "9.0.0"
+        },
+        "file_exists": [
+          ".eslintrc",
+          ".eslintrc.js",
+          ".eslintrc.cjs",
+          ".eslintrc.json",
+          ".eslintrc.yml",
+          ".eslintrc.yaml"
+        ],
+        "file_absent": [
+          "eslint.config.js",
+          "eslint.config.mjs",
+          "eslint.config.cjs",
+          "eslint.config.ts"
+        ]
+      },
+      "title": "ESLint 9 is installed but the project still uses .eslintrc \u2014 your lint rules are not running",
+      "detail": "ESLint 9 made flat config the only supported format. A legacy .eslintrc file is ignored entirely unless ESLINT_USE_FLAT_CONFIG=false is set, so lint appears to pass while checking nothing.",
+      "recommendation": "Migrate to eslint.config.js. `npx @eslint/migrate-config .eslintrc.json` generates a starting point; review it, then delete the old file and .eslintignore.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "lint",
+        "ci"
+      ],
+      "references": [
+        "https://eslint.org/docs/latest/use/configure/migration-guide"
+      ]
+    },
+    {
+      "id": "CRUFT.eslintignore-under-flat-config",
+      "category": "CRUFT",
+      "severity": "medium",
+      "when": {
+        "dependency": {
+          "name": "eslint",
+          "version_gte": "9.0.0"
+        },
+        "file_exists": [
+          ".eslintignore"
+        ]
+      },
+      "title": ".eslintignore is silently ignored by ESLint 9",
+      "detail": "Flat config replaced .eslintignore with an `ignores` key in eslint.config.js. Files you believe are excluded are being linted.",
+      "recommendation": "Move the patterns into an `ignores` array in eslint.config.js and delete .eslintignore.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [
+        "lint"
+      ],
+      "references": [
+        "https://eslint.org/docs/latest/use/configure/ignore"
+      ]
+    },
+    {
+      "id": "DECAY.tslint",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "any": [
+          {
+            "dependency": {
+              "name": "tslint",
+              "present": true
+            }
+          },
+          {
+            "file_exists": [
+              "tslint.json"
+            ]
+          }
+        ]
+      },
+      "title": "TSLint is deprecated and unmaintained since 2019",
+      "detail": "TSLint was deprecated in favour of typescript-eslint and receives no rule updates, meaning no coverage of any TypeScript feature added since 2019.",
+      "recommendation": "Migrate to typescript-eslint. `npx tslint-to-eslint-config` converts most rule sets automatically.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "lint",
+        "ci"
+      ],
+      "references": [
+        "https://typescript-eslint.io/"
+      ],
+      "covers": [
+        "tslint"
+      ]
+    },
+    {
+      "id": "STAGNATION.create-react-app",
+      "category": "STAGNATION",
+      "severity": "high",
+      "when": {
+        "dependency": {
+          "name": "react-scripts",
+          "present": true
+        }
+      },
+      "title": "Create React App is no longer maintained",
+      "detail": "react-scripts stopped receiving updates and its transitive dependency tree accumulates advisories that cannot be resolved without ejecting. The React team no longer recommends it for new projects.",
+      "recommendation": "Migrate to Vite (smallest jump for an SPA) or a framework such as Next.js/Remix if you want routing and SSR. See references/modernization-recipes.md.",
+      "effort": "large",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "test",
+        "dev"
+      ],
+      "references": [
+        "https://react.dev/learn/build-a-react-app-from-scratch"
+      ],
+      "covers": [
+        "react-scripts"
+      ]
+    },
+    {
+      "id": "DECAY.node-sass",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "dependency": {
+          "name": "node-sass",
+          "present": true
+        }
+      },
+      "title": "node-sass is deprecated and pins you to specific Node versions",
+      "detail": "node-sass wraps LibSass, which is itself deprecated. It ships native bindings compiled per Node major, so it breaks on every Node upgrade \u2014 a common reason repos get stuck on an old runtime.",
+      "recommendation": "Replace with `sass` (dart-sass). The API is compatible for most projects; `@import` should become `@use`/`@forward`.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build"
+      ],
+      "references": [
+        "https://sass-lang.com/blog/libsass-is-deprecated/"
+      ],
+      "covers": [
+        "node-sass"
+      ]
+    },
+    {
+      "id": "HAZARD.request-abandoned",
+      "category": "HAZARD",
+      "severity": "medium",
+      "when": {
+        "dependency": {
+          "name": "request",
+          "present": true
+        }
+      },
+      "title": "`request` was fully deprecated in 2020 and receives no security fixes",
+      "detail": "The package is archived. Its dependency tree carries known advisories that will never be patched.",
+      "recommendation": "Replace with the built-in `fetch` (Node 18+), `undici`, or `axios`.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "runtime"
+      ],
+      "references": [
+        "https://github.com/request/request/issues/3142"
+      ],
+      "covers": [
+        "request",
+        "request-promise"
+      ]
+    },
+    {
+      "id": "STAGNATION.moment",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "dependency": {
+          "name": "moment",
+          "present": true
+        }
+      },
+      "title": "Moment.js is in maintenance mode and its authors recommend alternatives",
+      "detail": "Moment is not deprecated but is frozen: no new features, and its mutable API and bundle size are widely considered legacy. Its own docs point new projects elsewhere.",
+      "recommendation": "For new code use date-fns, Day.js, or the platform Temporal API. Migrating an existing codebase is optional \u2014 this is a low-priority modernization, not a defect.",
+      "effort": "large",
+      "autofix": "manual",
+      "blast_radius": [
+        "runtime"
+      ],
+      "references": [
+        "https://momentjs.com/docs/#/-project-status/"
+      ],
+      "covers": [
+        "moment"
+      ]
+    },
+    {
+      "id": "DECAY.babel-eslint",
+      "category": "DECAY",
+      "severity": "medium",
+      "when": {
+        "dependency": {
+          "name": "babel-eslint",
+          "present": true
+        }
+      },
+      "title": "babel-eslint was renamed to @babel/eslint-parser and the old package is dead",
+      "recommendation": "Replace with @babel/eslint-parser and update the `parser` field in your ESLint config.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [
+        "lint"
+      ],
+      "references": [
+        "https://www.npmjs.com/package/babel-eslint"
+      ],
+      "covers": [
+        "babel-eslint"
+      ]
+    },
+    {
+      "id": "DECAY.enzyme",
+      "category": "DECAY",
+      "severity": "medium",
+      "when": {
+        "dependency": {
+          "name": "enzyme",
+          "present": true
+        }
+      },
+      "title": "Enzyme has no official adapter beyond React 16 and blocks React upgrades",
+      "detail": "Enzyme is unmaintained. Projects using it cannot move past React 17 without an unofficial adapter, which makes it a hard blocker on the whole frontend upgrade path.",
+      "recommendation": "Migrate to @testing-library/react. Expect to rewrite tests rather than port them \u2014 the philosophies differ.",
+      "effort": "large",
+      "autofix": "manual",
+      "blast_radius": [
+        "test"
+      ],
+      "references": [
+        "https://testing-library.com/docs/react-testing-library/intro/"
+      ],
+      "covers": [
+        "enzyme"
+      ]
+    },
+    {
+      "id": "DECAY.protractor",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "dependency": {
+          "name": "protractor",
+          "present": true
+        }
+      },
+      "title": "Protractor reached end of life in 2023",
+      "recommendation": "Migrate end-to-end tests to Playwright or Cypress.",
+      "effort": "large",
+      "autofix": "manual",
+      "blast_radius": [
+        "test",
+        "ci"
+      ],
+      "references": [
+        "https://github.com/angular/protractor/issues/5502"
+      ],
+      "covers": [
+        "protractor"
+      ]
+    },
+    {
+      "id": "DECAY.bower",
+      "category": "DECAY",
+      "severity": "medium",
+      "when": {
+        "file_exists": [
+          "bower.json",
+          ".bowerrc"
+        ]
+      },
+      "title": "Bower has been deprecated since 2017",
+      "recommendation": "Move remaining Bower dependencies to npm and delete bower.json.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build"
+      ],
+      "references": [
+        "https://bower.io/blog/2017/how-to-migrate-away-from-bower/"
+      ],
+      "covers": [
+        "bower"
+      ]
+    },
+    {
+      "id": "CRUFT.babelrc-without-babel",
+      "category": "CRUFT",
+      "severity": "low",
+      "when": {
+        "file_exists": [
+          ".babelrc",
+          ".babelrc.js",
+          "babel.config.js",
+          "babel.config.json"
+        ],
+        "dependency_absent": [
+          "@babel/core",
+          "babel-core",
+          "next",
+          "react-scripts",
+          "@babel/cli",
+          "gatsby",
+          "expo"
+        ]
+      },
+      "title": "Babel config exists but Babel is not a dependency",
+      "detail": "Nothing reads this file. It survives because deleting config feels riskier than leaving it, which is how config surfaces grow without bound.",
+      "recommendation": "Confirm no toolchain reads it (some bundlers pick it up implicitly), then delete.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [],
+      "confidence": "medium"
+    },
+    {
+      "id": "CRUFT.dual-ci-systems",
+      "category": "CRUFT",
+      "severity": "low",
+      "when": {
+        "file_exists": [
+          ".travis.yml",
+          "circle.yml",
+          "appveyor.yml",
+          "Jenkinsfile"
+        ],
+        "file_exists_all": [
+          ".github/workflows"
+        ]
+      },
+      "title": "A legacy CI config sits alongside GitHub Actions",
+      "detail": "Two CI definitions mean one of them is lying about how the project is built. New contributors read the wrong one.",
+      "recommendation": "Delete the unused CI config, or document why both exist.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [
+        "ci"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "STAGNATION.no-dependency-automation",
+      "category": "STAGNATION",
+      "severity": "medium",
+      "when": {
+        "has_any_ecosystem": true,
+        "file_absent": [
+          ".github/dependabot.yml",
+          ".github/dependabot.yaml",
+          "renovate.json",
+          ".renovaterc",
+          ".renovaterc.json",
+          ".github/renovate.json"
+        ]
+      },
+      "title": "No automated dependency updates are configured",
+      "detail": "Version DRIFT is the one category of rot that is fully solved by existing tooling. Without Dependabot or Renovate, every bump is manual, so bumps stop happening and the rest of the rot compounds on top.",
+      "recommendation": "Add a Dependabot config (simplest) or Renovate (more control over batching and auto-merge). This tool is deliberately complementary: let them handle version bumps so this handles the migrations those bumps require.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [],
+      "references": [
+        "https://docs.github.com/code-security/dependabot/dependabot-version-updates"
+      ]
+    },
+    {
+      "id": "STAGNATION.lerna-legacy",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "dependency": {
+          "name": "lerna",
+          "version_lt": "6.0.0"
+        }
+      },
+      "title": "Lerna below v6 predates its Nx-backed rewrite and is effectively unmaintained",
+      "recommendation": "Either upgrade Lerna, or move to native npm/pnpm/yarn workspaces, which now cover what most repos used Lerna for.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build"
+      ],
+      "references": [
+        "https://lerna.js.org/docs/legacy-package-management"
+      ],
+      "covers": [
+        "lerna"
+      ]
+    },
+    {
+      "id": "DECAY.webpack-4",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "dependency": {
+          "name": "webpack",
+          "version_lt": "5.0.0"
+        }
+      },
+      "title": "Webpack 4 reached end of life and does not support modern Node",
+      "detail": "Webpack 4 fails on Node 17+ without the legacy OpenSSL provider flag \u2014 a workaround that is itself a strong rot signal when you find it in a repo's scripts.",
+      "recommendation": "Upgrade to Webpack 5, or migrate to Vite if the config is mostly defaults.",
+      "effort": "large",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build"
+      ],
+      "references": [
+        "https://webpack.js.org/migrate/5/"
+      ],
+      "covers": [
+        "webpack"
+      ]
+    },
+    {
+      "id": "STAGNATION.setup-py-only",
+      "category": "STAGNATION",
+      "severity": "medium",
+      "when": {
+        "ecosystem": "python",
+        "file_exists": [
+          "setup.py"
+        ],
+        "file_absent": [
+          "pyproject.toml"
+        ]
+      },
+      "title": "Packaging is declared in setup.py with no pyproject.toml",
+      "detail": "PEP 517/518/621 made pyproject.toml the standard. setuptools still works, but modern tooling (uv, ruff, build, pip's isolated builds) expects pyproject and an increasing amount of it degrades or refuses without one.",
+      "recommendation": "Add pyproject.toml with [build-system] and [project] metadata. setup.py can remain as a shim for editable installs if needed.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "packaging"
+      ],
+      "references": [
+        "https://packaging.python.org/en/latest/guides/writing-pyproject-toml/"
+      ]
+    },
+    {
+      "id": "DECAY.python-distutils",
+      "category": "DECAY",
+      "severity": "critical",
+      "when": {
+        "ecosystem": "python",
+        "file_contains": [
+          {
+            "glob": "\\.py$",
+            "pattern": "^\\s*(import|from)\\s+distutils"
+          }
+        ]
+      },
+      "title": "distutils was removed from the standard library in Python 3.12",
+      "detail": "Any import of distutils raises ImportError on 3.12+. This is not a deprecation warning \u2014 it is a hard failure that blocks the runtime upgrade entirely.",
+      "recommendation": "Replace distutils usage with setuptools equivalents, or `packaging` for version parsing.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "runtime"
+      ],
+      "references": [
+        "https://peps.python.org/pep-0632/"
+      ]
+    },
+    {
+      "id": "DECAY.python-six",
+      "category": "DECAY",
+      "severity": "low",
+      "when": {
+        "ecosystem": "python",
+        "dependency": {
+          "name": "six",
+          "present": true
+        }
+      },
+      "title": "`six` is a Python 2/3 compatibility shim in a Python 3-only world",
+      "detail": "Often pulled in transitively rather than declared. When it is a direct dependency it usually means the codebase carries Python 2 compatibility branches that no longer run.",
+      "recommendation": "Remove the direct dependency and inline the handful of six calls with their Python 3 equivalents.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [],
+      "confidence": "medium",
+      "covers": [
+        "six"
+      ]
+    },
+    {
+      "id": "DECAY.nose",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "ecosystem": "python",
+        "dependency": {
+          "name": "nose",
+          "present": true
+        }
+      },
+      "title": "`nose` is unmaintained and does not import on Python 3.10+",
+      "recommendation": "Migrate to pytest. Most nose-style test functions run under pytest unchanged; setup/teardown and yield-tests need rewriting.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "test",
+        "ci"
+      ],
+      "references": [
+        "https://nose.readthedocs.io/en/latest/"
+      ],
+      "covers": [
+        "nose"
+      ]
+    },
+    {
+      "id": "STAGNATION.python-linter-sprawl",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "ecosystem": "python",
+        "dependency_any": [
+          "flake8",
+          "isort",
+          "pylint",
+          "autoflake",
+          "pyupgrade",
+          "bandit"
+        ],
+        "count_gte": 3
+      },
+      "title": "Three or more separate Python linters where ruff now covers all of them",
+      "detail": "flake8 + isort + pyupgrade + bandit is roughly one ruff config, running one to two orders of magnitude faster. Each tool is also a separate config file, a separate CI step, and a separate thing to keep current.",
+      "recommendation": "Consolidate onto ruff. `ruff check --select ALL` then narrow, and delete the superseded configs and CI steps.",
+      "effort": "medium",
+      "autofix": "assisted",
+      "blast_radius": [
+        "lint",
+        "ci"
+      ],
+      "references": [
+        "https://docs.astral.sh/ruff/"
+      ]
+    },
+    {
+      "id": "DECAY.gh-set-output",
+      "category": "DECAY",
+      "severity": "critical",
+      "when": {
+        "file_contains": [
+          {
+            "glob": "^\\.github/workflows/",
+            "pattern": "::set-output|::set-env|::save-state"
+          }
+        ]
+      },
+      "title": "Workflow uses the removed ::set-output / ::set-env command syntax",
+      "detail": "These workflow commands were disabled by GitHub for security reasons. They no longer set anything \u2014 the step succeeds and the downstream step silently receives an empty value.",
+      "recommendation": "Write to $GITHUB_OUTPUT / $GITHUB_ENV instead: `echo \"key=value\" >> \"$GITHUB_OUTPUT\"`.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [
+        "ci"
+      ],
+      "references": [
+        "https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/"
+      ]
+    },
+    {
+      "id": "DECAY.gh-action-node-runtime",
+      "category": "DECAY",
+      "severity": "high",
+      "when": {
+        "file_contains": [
+          {
+            "glob": "action\\.ya?ml$",
+            "pattern": "using:\\s*['\\\"]?node(12|16)"
+          }
+        ]
+      },
+      "title": "Composite/JS action declares a retired Node runtime",
+      "detail": "node12 and node16 runners have been retired from the Actions runtime. Workflows using this action will fail or emit hard deprecation errors.",
+      "recommendation": "Set `using: node20` (or node24) in action.yml and verify the action's code runs on that runtime.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [
+        "ci"
+      ],
+      "references": [
+        "https://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/"
+      ]
+    },
+    {
+      "id": "CRUFT.compose-version-key",
+      "category": "CRUFT",
+      "severity": "low",
+      "when": {
+        "file_contains": [
+          {
+            "glob": "docker-compose.*\\.ya?ml$|^compose\\.ya?ml$",
+            "pattern": "^version:"
+          }
+        ]
+      },
+      "title": "docker-compose file declares an obsolete top-level `version:` key",
+      "detail": "Compose V2 ignores it and warns on every invocation. Harmless, but it is a reliable marker that nothing has revisited this file in years.",
+      "recommendation": "Delete the `version:` line.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [],
+      "references": [
+        "https://docs.docker.com/compose/compose-file/"
+      ]
+    },
+    {
+      "id": "HAZARD.docker-latest-tag",
+      "category": "HAZARD",
+      "severity": "medium",
+      "when": {
+        "file_contains": [
+          {
+            "glob": "Dockerfile",
+            "pattern": "^\\s*FROM\\s+\\S+:latest|^\\s*FROM\\s+[a-z0-9./-]+\\s*(AS|$)"
+          }
+        ]
+      },
+      "title": "Dockerfile base image is untagged or uses :latest",
+      "detail": "The image you build today and the image you build after an incident are different images, and you have no record of which one worked. This turns every rebuild into an unreviewed dependency update.",
+      "recommendation": "Pin to an explicit major/minor tag, and to a digest for production images.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "runtime"
+      ],
+      "references": [
+        "https://docs.docker.com/build/building/best-practices/"
+      ]
+    },
+    {
+      "id": "STAGNATION.dockerfile-no-multistage",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "file_exists": [
+          "Dockerfile"
+        ],
+        "not_file_contains": [
+          {
+            "glob": "^Dockerfile$",
+            "pattern": "(?i)FROM\\s+.*\\s+AS\\s+"
+          }
+        ]
+      },
+      "title": "Single-stage Dockerfile ships build tooling into the runtime image",
+      "detail": "Compilers, dev dependencies and package caches end up in the deployed image, inflating it and widening the attack surface.",
+      "recommendation": "Split into a build stage and a slim runtime stage with `FROM ... AS build`.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build"
+      ],
+      "confidence": "medium",
+      "references": [
+        "https://docs.docker.com/build/building/multi-stage/"
+      ]
+    },
+    {
+      "id": "STAGNATION.no-lockfile",
+      "category": "STAGNATION",
+      "severity": "high",
+      "when": {
+        "ecosystem": "node",
+        "file_absent": [
+          "package-lock.json",
+          "yarn.lock",
+          "pnpm-lock.yaml",
+          "bun.lockb",
+          "npm-shrinkwrap.json"
+        ]
+      },
+      "title": "No lockfile \u2014 builds are not reproducible",
+      "detail": "Without a lockfile every install resolves fresh, so CI, your laptop and production can each get different transitive trees. It also makes every other finding here harder to verify, because you cannot tell what you actually ran.",
+      "recommendation": "Run your package manager's install once and commit the resulting lockfile.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [
+        "build",
+        "ci",
+        "runtime"
+      ]
+    },
+    {
+      "id": "CRUFT.multiple-lockfiles",
+      "category": "CRUFT",
+      "severity": "medium",
+      "when": {
+        "lockfile_count_gte": 2
+      },
+      "title": "Multiple package-manager lockfiles are committed",
+      "detail": "Only one of them reflects reality; the others are stale snapshots that mislead contributors and confuse tooling that auto-detects the package manager.",
+      "recommendation": "Keep the lockfile matching `packageManager` (or your CI), delete the rest, and add a `packageManager` field so the choice is explicit.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "ci"
+      ]
+    },
+    {
+      "id": "STAGNATION.no-package-manager-field",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "ecosystem": "node",
+        "file_exists": [
+          "package.json"
+        ],
+        "not_file_contains": [
+          {
+            "glob": "^package\\.json$",
+            "pattern": "\"packageManager\""
+          }
+        ]
+      },
+      "title": "package.json has no `packageManager` field",
+      "detail": "Corepack uses this field to pin the package manager and version. Without it, contributors and CI can silently use different managers, producing lockfile churn that looks like real change in every PR.",
+      "recommendation": "Add e.g. \"packageManager\": \"pnpm@9.12.0\" matching your committed lockfile.",
+      "effort": "trivial",
+      "autofix": "safe",
+      "blast_radius": [
+        "build",
+        "ci"
+      ],
+      "references": [
+        "https://nodejs.org/api/corepack.html"
+      ]
+    },
+    {
+      "id": "STAGNATION.ts-moduleresolution-node",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "dependency": {
+          "name": "typescript",
+          "version_gte": "5.0.0"
+        },
+        "file_contains": [
+          {
+            "glob": "tsconfig.*json$",
+            "pattern": "\"moduleResolution\"\\s*:\\s*\"[Nn]ode\""
+          }
+        ]
+      },
+      "title": "tsconfig uses the legacy \"node\" module resolution under TypeScript 5",
+      "detail": "\"node\" (node10) resolution does not understand package `exports` maps, so TypeScript resolves types differently from how your bundler and Node actually resolve modules. The symptom is types that are wrong or missing for correctly-installed packages.",
+      "recommendation": "Use \"bundler\" for bundled apps or \"node16\"/\"nodenext\" for code Node runs directly.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "build",
+        "types"
+      ],
+      "references": [
+        "https://www.typescriptlang.org/tsconfig/#moduleResolution"
+      ]
+    },
+    {
+      "id": "HAZARD.npmrc-legacy-peer-deps",
+      "category": "HAZARD",
+      "severity": "medium",
+      "when": {
+        "file_contains": [
+          {
+            "glob": "^\\.npmrc$",
+            "pattern": "legacy-peer-deps\\s*=\\s*true"
+          }
+        ]
+      },
+      "title": ".npmrc sets legacy-peer-deps=true, hiding real dependency conflicts",
+      "detail": "This flag is usually added once to unblock an install and then never removed. It suppresses every peer-dependency conflict repo-wide, so genuinely incompatible versions install cleanly and fail at runtime instead.",
+      "recommendation": "Remove the flag and resolve the conflicts it is masking. If one specific package needs it, use an override for that package rather than a global setting.",
+      "effort": "medium",
+      "autofix": "manual",
+      "blast_radius": [
+        "build",
+        "runtime"
+      ]
+    },
+    {
+      "id": "STAGNATION.gulp-grunt",
+      "category": "STAGNATION",
+      "severity": "low",
+      "when": {
+        "file_exists": [
+          "gulpfile.js",
+          "Gruntfile.js",
+          "gulpfile.babel.js"
+        ]
+      },
+      "title": "Task-runner build (Gulp/Grunt) predates the current bundler era",
+      "detail": "Not broken, but these ecosystems are largely dormant and their plugin dependencies are a common source of unfixable advisories.",
+      "recommendation": "Consider moving the pipeline to npm scripts plus Vite/esbuild. Low priority unless the plugins are blocking a Node upgrade.",
+      "effort": "large",
+      "autofix": "manual",
+      "blast_radius": [
+        "build"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "CRUFT.python-flake8-config-with-ruff",
+      "category": "CRUFT",
+      "severity": "low",
+      "when": {
+        "ecosystem": "python",
+        "dependency": {
+          "name": "ruff",
+          "present": true
+        },
+        "file_exists": [
+          ".flake8",
+          "tox.ini"
+        ],
+        "dependency_absent": [
+          "flake8"
+        ]
+      },
+      "title": "flake8 config remains after the move to ruff",
+      "detail": "Nothing reads it, but contributors edit it expecting an effect.",
+      "recommendation": "Fold any still-relevant excludes into [tool.ruff] and delete the leftover config.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [],
+      "confidence": "medium"
+    },
+    {
+      "id": "DECAY.python-mock-package",
+      "category": "DECAY",
+      "severity": "low",
+      "when": {
+        "ecosystem": "python",
+        "dependency": {
+          "name": "mock",
+          "present": true
+        }
+      },
+      "title": "The standalone `mock` package duplicates unittest.mock from the standard library",
+      "recommendation": "Replace `import mock` with `from unittest import mock` and drop the dependency.",
+      "effort": "trivial",
+      "autofix": "assisted",
+      "blast_radius": [
+        "test"
+      ],
+      "covers": [
+        "mock"
+      ]
+    },
+    {
+      "id": "STAGNATION.no-ci",
+      "category": "STAGNATION",
+      "severity": "high",
+      "when": {
+        "file_absent_glob": [
+          "^\\.github/workflows/.*\\.ya?ml$",
+          "^\\.gitlab-ci\\.yml$",
+          "^\\.circleci/config\\.yml$",
+          "^Jenkinsfile$",
+          "^azure-pipelines\\.yml$",
+          "^\\.travis\\.yml$"
+        ],
+        "has_any_ecosystem": true
+      },
+      "title": "No CI configuration found",
+      "detail": "Without CI there is no verification surface, which means no safe way to land any of the other remediations in this report. Fixing this first makes everything else cheaper.",
+      "recommendation": "Add a minimal workflow that installs, lints, and tests on push and pull_request.",
+      "effort": "small",
+      "autofix": "assisted",
+      "blast_radius": [
+        "ci"
+      ]
+    }
+  ]
+}
