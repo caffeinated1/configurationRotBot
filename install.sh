@@ -1,7 +1,7 @@
 #!/bin/sh
 # configurationRotBot installer
 #
-#   curl -fsSL https://raw.githubusercontent.com/caffeinated1/configurationRotBot/v1/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/caffeinated1/configurationRotBot/main/install.sh | sh
 #
 # Installs the config-rot skill into .claude/skills/, writes a starter
 # CONFIGROT.md if you don't have one, and runs a first scan.
@@ -12,7 +12,7 @@
 #
 # Options:
 #   --dir PATH      install into PATH (default: ./.claude/skills)
-#   --ref REF       install a specific tag, branch or commit (default: v1)
+#   --ref REF       install a specific tag, branch or commit (default: main)
 #   --no-scan       install without running the first scan
 #   --no-policy     do not write a starter CONFIGROT.md
 #   --uninstall     remove a previous install and exit
@@ -21,7 +21,9 @@
 set -eu
 
 REPO="caffeinated1/configurationRotBot"
-REF="${CONFIGROT_REF:-v1}"
+# Defaults to main until release tags are cut; pass --ref v1.0.0 (or set
+# CONFIGROT_REF) to pin an install to a specific release.
+REF="${CONFIGROT_REF:-main}"
 DIR=""
 RUN_SCAN=1
 WRITE_POLICY=1

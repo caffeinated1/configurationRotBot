@@ -6,7 +6,8 @@ release so `uses: caffeinated1/configurationRotBot@v1` stays current.
 
 ## v1.0.0 — 2026-09-01
 
-First release.
+First release. Merged to `main`; the `v1.0.0` and `v1` tags are not yet pushed,
+so installs and Action references use `main` until they are.
 
 ### What it does
 

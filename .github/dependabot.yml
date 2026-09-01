@@ -1,0 +1,17 @@
+# configurationRotBot has no runtime dependencies to update — the scanner is
+# standard-library only, on purpose. What it does have is pinned GitHub Actions,
+# which is exactly the drift its own `eol` detector reports in other people's
+# repositories.
+#
+# Added because the tool raised STAGNATION.no-dependency-automation against this
+# repository and was right to. A project that reports rot should not carry it.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore"
