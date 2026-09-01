@@ -84,12 +84,22 @@ def _npm(inv, ctx) -> list[Finding]:
         return []
     code, stdout = _run(["npm", "audit", "--json", "--audit-level=low"], inv.root)
     if not stdout:
-        ctx.skip(DETECTOR, "npm audit produced no output")
+        ctx.skip(DETECTOR, "npm audit produced no output — advisories were not checked")
         return []
     try:
         data = json.loads(stdout)
     except json.JSONDecodeError:
         ctx.skip(DETECTOR, "npm audit output could not be parsed")
+        return []
+    # npm reports its own failures as JSON with an `error` key and no metadata.
+    # Treating that as "no vulnerabilities" would be exactly the manufactured
+    # confidence this detector exists to avoid.
+    if data.get("error") or "metadata" not in data:
+        detail = (data.get("error") or {}).get("summary") if isinstance(
+            data.get("error"), dict) else None
+        ctx.skip(DETECTOR, "npm audit could not run"
+                           + (f": {detail}" if detail else " (is the lockfile valid?)")
+                           + " — JavaScript advisories were not checked")
         return []
     counts = ((data.get("metadata") or {}).get("vulnerabilities") or {})
     counts = {k: v for k, v in counts.items() if k != "total" and isinstance(v, int) and v}
@@ -105,7 +115,8 @@ def _pip(inv, ctx) -> list[Finding]:
         return []
     code, stdout = _run(["pip-audit", "-f", "json", "--progress-spinner=off"], inv.root)
     if not stdout:
-        ctx.skip(DETECTOR, "pip-audit produced no output")
+        ctx.skip(DETECTOR, "pip-audit produced no output — Python advisories "
+                           "were not checked")
         return []
     try:
         data = json.loads(stdout)
@@ -140,6 +151,8 @@ def _cargo(inv, ctx) -> list[Finding]:
     try:
         data = json.loads(stdout)
     except json.JSONDecodeError:
+        ctx.skip(DETECTOR, "cargo audit output could not be parsed — Rust "
+                           "advisories were not checked")
         return []
     count = len(((data.get("vulnerabilities") or {}).get("list")) or [])
     if not count:
@@ -154,6 +167,8 @@ def _go(inv, ctx) -> list[Finding]:
         return []
     code, stdout = _run(["govulncheck", "-json", "./..."], inv.root)
     if not stdout:
+        ctx.skip(DETECTOR, "govulncheck produced no output — Go advisories "
+                           "were not checked")
         return []
     ids = {line.split('"id":"')[1].split('"')[0]
            for line in stdout.splitlines() if '"id":"GO-' in line}

@@ -35,14 +35,21 @@ table, and consider whether it should become a rule in `data/rules.json`.
 ### 1. Scan first, always
 
 ```bash
+# When the skill is installed into a project:
+python3 .claude/skills/config-rot/scripts/scan.py --repo . --json .configrot/findings.json
+
+# When working inside a clone of the configurationRotBot repo itself:
 python3 skills/config-rot/scripts/scan.py --repo . --json .configrot/findings.json
 ```
 
-Adjust the path to wherever the skill lives. Useful flags:
+The scanner is read-only and needs no dependencies, so it is safe to run before
+you have established anything else about the repo. Useful flags:
 
 - `--online` — also check registries for how far behind dependencies are (DRIFT).
   Skip it when offline or when the user only wants the structural problems.
 - `--categories DECAY,DIVERGENCE` — narrow the scan.
+- `--exclude '^examples/'` — skip vendored or fixture projects whose rot is not
+  this repo's rot. Also read from `CONFIGROT.md`.
 - `--format markdown` — human-readable straight to stdout.
 
 Exit code encodes the worst severity found (0 clean, 1 low, 2 medium, 3 high,

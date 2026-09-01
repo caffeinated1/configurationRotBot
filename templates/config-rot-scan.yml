@@ -1,0 +1,46 @@
+# Tier 0.5 — scan only, no agent, no API key.
+#
+# Copy to .github/workflows/config-rot.yml in your repository.
+#
+# This posts a rot report to the job summary on every pull request and weekly on
+# the default branch. It changes nothing and costs nothing beyond runner
+# minutes. Start here: you get the diagnosis before deciding how much autonomy
+# to grant.
+
+name: Configuration rot
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 7 * * 1"      # Mondays, 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: rot
+        uses: caffeinated1/configurationRotBot@v1
+        with:
+          # Registry lookups and native audit tools. Turn off if your runners
+          # have no egress.
+          online: true
+
+          # Start at `never` while you work through the backlog, then ratchet:
+          # critical, then high, then medium. A gate that blocks the team on
+          # day one gets deleted on day two.
+          fail-on: never
+
+      - name: Upload findings
+        uses: actions/upload-artifact@v4
+        with:
+          name: config-rot-findings
+          path: |
+            ROT-REPORT.md
+            findings.json
+          retention-days: 30

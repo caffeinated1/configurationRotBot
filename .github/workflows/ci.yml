@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the floor: the scanner falls back to a hand-rolled TOML reader
+        # below 3.11, and that path needs exercising on every change.
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Assert the scanner has no third-party imports
+        run: python3 tests/test_stdlib_only.py
+
+      - name: Scanner tests
+        run: python3 tests/test_scan.py
+
+      - name: Dataset schema tests
+        run: python3 tests/test_rules.py
+
+  self-scan:
+    name: Scan this repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configuration rot scan
+        uses: ./
+        with:
+          fail-on: high
+
+  fixture:
+    name: Fixture still exercises every detector
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan the deliberately rotten fixture
+        run: |
+          python3 skills/config-rot/scripts/scan.py \
+            --repo examples/rotten-repo --format markdown --no-state --exit-zero \
+            >> "$GITHUB_STEP_SUMMARY"

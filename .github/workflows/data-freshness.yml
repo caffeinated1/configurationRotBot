@@ -1,0 +1,44 @@
+name: Data freshness
+
+# The bundled EOL dataset is a snapshot, so it goes stale by definition. A tool
+# that diagnoses staleness should not be smug about its own — this opens a PR
+# when upstream has moved.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh EOL data from endoflife.date
+        run: python3 skills/config-rot/scripts/refresh_data.py
+
+      - name: Verify the refreshed dataset still passes its schema checks
+        run: python3 tests/test_rules.py
+
+      - name: Open a pull request if anything changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/refresh-eol-data
+          title: "chore: refresh EOL dataset from endoflife.date"
+          commit-message: "chore: refresh EOL dataset from endoflife.date"
+          body: |
+            Automated refresh of `skills/config-rot/data/eol.json`.
+
+            Review the diff before merging — a cycle disappearing upstream is
+            worth a second look, since it silences findings rather than adding
+            them.
+          labels: dependencies
+          delete-branch: true

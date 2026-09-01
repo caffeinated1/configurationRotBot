@@ -239,6 +239,23 @@ class Safety(unittest.TestCase):
                      for p in os.listdir(tmp)}
             self.assertEqual(before, after, "scan.py must not modify the repository")
 
+    def test_online_mode_also_writes_nothing_to_the_repo(self):
+        """The registry cache belongs in a user cache dir, not the scanned repo.
+
+        Regression guard: the cache was originally written to
+        `<repo>/.configrot/`, which silently broke the read-only guarantee for
+        anyone passing --online.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            write(tmp, "package.json",
+                  '{"name":"x","dependencies":{"left-pad":"^1.0.0"}}')
+            before = sorted(os.listdir(tmp))
+            # No network is needed to prove this: the cache write happens on the
+            # same path whether or not the lookups succeed.
+            run_scan(tmp, "--online", "--detectors", "drift")
+            self.assertEqual(before, sorted(os.listdir(tmp)),
+                             "--online must not create files in the scanned repo")
+
     def test_survives_a_malformed_manifest(self):
         with tempfile.TemporaryDirectory() as tmp:
             write(tmp, "package.json", "{ this is not json")

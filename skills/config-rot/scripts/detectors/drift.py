@@ -63,7 +63,16 @@ RESOLVERS = {"node": _latest_npm, "python": _latest_pypi,
 
 
 def _cache_path(root: str) -> str:
-    return os.path.join(root, ".configrot", "registry-cache.json")
+    """A user-level cache directory, never inside the repository under scan.
+
+    The read-only guarantee is what makes scan.py safe to point at CI
+    workspaces and at code you have not read, and a cache file is still a
+    write. Keying by repo path keeps unrelated projects from colliding.
+    """
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(
+        os.path.expanduser("~"), ".cache")
+    key = str(abs(hash(os.path.abspath(root))) % (10 ** 12))
+    return os.path.join(base, "configrotbot", f"registry-{key}.json")
 
 
 def _load_cache(root: str) -> dict:
