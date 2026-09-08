@@ -325,8 +325,9 @@ Terraform and Kubernetes. Roadmap and open design questions are in
 
 [`community-goal/`](community-goal/README.md) is a separate deliverable that
 shares this repository's stdlib-only, no-dependency approach: an interactive
-site and open JSON API built from a civic guide, *"A town's first data center:
-what to require before saying yes."*
+site and open JSON API built from *"A town's first data center: what to require
+before saying yes"*, a document published by Mark Cuban on
+[LinkedIn](https://lnkd.in/p/e-Pbqzrm).
 
 - **Site:** https://caffeinated1.github.io/configurationRotBot/
 - **API:** `api/v1/` — 10 sections, 71 requirements, 18 checkable claims, all

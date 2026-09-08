@@ -112,6 +112,17 @@ class SourceDataTests(unittest.TestCase):
         with self.assertRaises(builder.BuildError):
             builder.validate(self.guide, self.sections, self.evidence, jurisdictions)
 
+    def test_the_source_is_credited(self) -> None:
+        # The guide asks every contributor to cite their claims. It has to
+        # credit the document it is adapted from by the same standard.
+        source = self.guide["meta"]["source"]
+        for field in ("document_title", "published_by", "platform", "url",
+                      "credit", "provenance", "relationship"):
+            self.assertTrue(str(source.get(field, "")).strip(), field)
+        self.assertTrue(source["url"].startswith("https://"), source["url"])
+        self.assertIn(source["published_by"], source["credit"])
+        self.assertIn(source["published_by"], self.guide["meta"]["source_note"])
+
     def test_the_four_pillars_are_intact(self) -> None:
         ids = [p["id"] for p in self.guide["basic_rule"]["pillars"]]
         self.assertEqual(ids, ["limit", "verification", "party", "remedy"])
@@ -264,6 +275,22 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(coverage["uncited"], len(evidence) - len(cited))
         self.assertEqual(sorted(coverage["uncited_ids"]),
                          sorted(e["id"] for e in evidence if not e.get("sources")))
+
+    def test_markdown_carries_the_attribution(self) -> None:
+        with open(os.path.join(self.api, "guide.md"), encoding="utf-8") as handle:
+            text = handle.read()
+        source = read(os.path.join(self.api, "index.json"))["meta"]["source"]
+        self.assertIn(source["credit"], text)
+        self.assertIn(source["url"], text)
+        self.assertIn("Where this came from", text)
+
+    def test_every_endpoint_carries_the_source_in_its_meta(self) -> None:
+        # Anyone consuming one endpoint gets the provenance with it, not only
+        # readers who land on the site.
+        for name in ("index.json", "goal.json", "evidence.json", "requirements.json"):
+            meta = read(os.path.join(self.api, name))["meta"]
+            self.assertIn("source", meta, name)
+            self.assertEqual(meta["source"]["url"], "https://lnkd.in/p/e-Pbqzrm")
 
     def test_markdown_flags_uncited_claims_instead_of_hiding_them(self) -> None:
         with open(os.path.join(self.api, "guide.md"), encoding="utf-8") as handle:

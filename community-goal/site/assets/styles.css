@@ -607,3 +607,9 @@ pre {
   margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
   font-size: .87rem; color: var(--ink-soft);
 }
+
+.credit {
+  font-size: .86rem; color: var(--ink-faint); margin-top: -.4rem;
+  padding-left: .8rem; border-left: 2px solid var(--line-strong);
+}
+.credit a { color: var(--accent-ink); }

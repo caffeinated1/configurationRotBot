@@ -11,6 +11,18 @@
       "residents",
       "county supervisors"
     ],
+    "source": {
+      "document_title": "A town's first data center: what to require before saying yes",
+      "shared_as": "A community guide for data centers",
+      "published_by": "Mark Cuban",
+      "platform": "LinkedIn",
+      "url": "https://lnkd.in/p/e-Pbqzrm",
+      "pages": 8,
+      "retrieved": "2026-09-08",
+      "provenance": "The post accompanying the document describes it as produced with AI assistance from data center contracts. It names no citations. That is why every claim here ships with a way to verify it locally and an open sources array, rather than a footnote it cannot support.",
+      "relationship": "This project restructures that document into addressable requirements, evidence, and an API, and adds the scoring model, jurisdiction overlays, and contribution process. Section order, substance, and every figure are the source document's. Individual requirement titles and detail are rewritten for addressability.",
+      "credit": "Adapted from “A town's first data center: what to require before saying yes”, published by Mark Cuban on LinkedIn."
+    },
     "project": {
       "repository": "https://github.com/caffeinated1/configurationRotBot",
       "directory": "community-goal",
@@ -31,7 +43,7 @@
       "attribution": "Community Goal — a town's first data center (github.com/caffeinated1/configurationRotBot), CC BY 4.0"
     },
     "contributions": "Open to anyone: residents, town staff, NGOs, agencies, and practitioners. Contributions are accepted under CC BY 4.0 for content and MIT for code, and contributors disclose any interest in a data center project. See GOVERNANCE.md.",
-    "source_note": "Content is a structured rendering of the source guide. Figures and case references are reproduced as stated in the source document; the source does not name its citations, so treat every figure as a claim to verify locally before relying on it in a hearing.",
+    "source_note": "Content is a structured rendering of a document published by Mark Cuban on LinkedIn. Figures and case references are reproduced as stated there; the source names no citations, so treat every figure as a claim to verify locally before relying on it in a hearing. Sourcing them is the guide's top contribution ask.",
     "disclaimer": "This is not legal advice. Authority for zoning conditions, exactions, payments, and utility commitments varies by state. Confirm every item with counsel licensed in your jurisdiction."
   },
   "goal": {

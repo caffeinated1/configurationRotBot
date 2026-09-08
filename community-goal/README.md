@@ -1,7 +1,9 @@
 # Community Goal — a town's first data center
 
 An interactive guide and open JSON API built from
-*"A town's first data center: what to require before saying yes."*
+*"A town's first data center: what to require before saying yes"* — a document
+published by Mark Cuban on
+[LinkedIn](https://lnkd.in/p/e-Pbqzrm).
 
 **Site:** https://caffeinated1.github.io/configurationRotBot/
 **API root:** https://caffeinated1.github.io/configurationRotBot/api/v1/index.json
@@ -201,11 +203,19 @@ silently break it.
 
 ## Provenance and limits
 
-The content is a structured rendering of the source guide. Figures and case
-references are reproduced as stated there; the source does not name its
-citations, which is why every evidence item ships with a `verify` field instead
-of a footnote, and why sourcing them is the top contribution ask. Treat each one
-as a claim to confirm locally before relying on it in a hearing.
+The content is a structured rendering of a document published by Mark Cuban on
+LinkedIn ([original](https://lnkd.in/p/e-Pbqzrm)). Its accompanying post
+describes it as produced with AI assistance from data center contracts, and it
+names no citations — which is why every evidence item here ships with a `verify`
+field instead of a footnote, why coverage is published at `api/v1/coverage.json`
+rather than hidden, and why sourcing the 18 claims is the top contribution ask.
+Treat each one as a claim to confirm locally before relying on it in a hearing.
+
+Section order, substance, and every figure are the source document's. This
+project adds the structure, the scoring model, jurisdiction overlays, the API,
+and the contribution process; individual requirement titles and detail are
+rewritten so each one is addressable and citable. Full provenance is in
+`api/v1/index.json` under `meta.source`.
 
 **This is not legal advice.** Authority for zoning conditions, exactions,
 payments, and utility commitments varies by state. Confirm every item with

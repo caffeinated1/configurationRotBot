@@ -133,6 +133,10 @@
     document.title = m.title;
     $('#doc-title').textContent = m.title;
     $('#doc-subtitle').textContent = m.subtitle;
+    $('#credit').innerHTML = m.source
+      ? `${esc(m.source.credit)} <a href="${esc(m.source.url)}" target="_blank"
+           rel="noopener noreferrer">Original post →</a>`
+      : '';
     $('#goal-statement').textContent = guide.goal.statement;
     $('#goal-rule').textContent = guide.goal.rule;
     $('#disclaimer').textContent = m.disclaimer;
@@ -578,6 +582,14 @@
 
   function renderEvidence() {
     $('#evidence-warning').textContent = guide.meta.source_note;
+    const src = guide.meta.source;
+    $('#evidence-provenance').innerHTML = src
+      ? `<strong>Where this came from.</strong> ${esc(src.credit)}
+         ${esc(src.provenance)}
+         <br><br><strong>What this project added.</strong> ${esc(src.relationship)}
+         <br><br><a href="${esc(src.url)}" target="_blank" rel="noopener noreferrer">
+           Read the original (${src.pages} pages) →</a>`
+      : '';
     $('#evidence-grid').innerHTML = guide.evidence.map((e) => `
       <article class="evidence-card" id="${e.id}">
         <div class="evidence-topic">${esc(e.topic)}</div>
@@ -726,6 +738,8 @@
       <p><strong>Licence.</strong> Content is ${esc(guide.meta.license.content)}; code is
       ${esc(guide.meta.license.code)}. Contributions are accepted under the same terms.
       Attribute as: <code>${esc(guide.meta.license.attribution)}</code></p>
+      <p><strong>Adapted from.</strong> ${esc(guide.meta.source.credit)}
+        <a href="${esc(guide.meta.source.url)}" target="_blank" rel="noopener noreferrer">Original →</a></p>
       <p><a href="${project.contributing}" target="_blank" rel="noopener noreferrer">Contributing guide</a>
        · <a href="${project.roadmap}" target="_blank" rel="noopener noreferrer">Roadmap</a>
        · <a href="${project.governance}" target="_blank" rel="noopener noreferrer">Governance</a>

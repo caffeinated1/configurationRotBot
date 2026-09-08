@@ -328,7 +328,10 @@ def openapi_spec(base_url: str, guide: dict, sections: list, requirements: list)
 
 def render_markdown(guide: dict, sections: list, evidence: list) -> str:
     """A plain-text rendering, so the guide survives outside a browser."""
+    source = guide["meta"].get("source")
     out: list[str] = [f"# {guide['meta']['title']}", "", guide["meta"]["subtitle"], ""]
+    if source:
+        out += [f"_{source['credit']} <{source['url']}>_", ""]
     out += ["## The goal", "", guide["goal"]["statement"], "", guide["goal"]["rule"], ""]
     out += [f"## {guide['framing']['heading']}", ""]
     for fact in guide["framing"]["facts"]:
@@ -351,6 +354,11 @@ def render_markdown(guide: dict, sections: list, evidence: list) -> str:
     for question in guide["final_questions"]:
         out += [f"- {question['question']}"]
     out += ["", guide["goal"]["rule"], "", "---", "", guide["meta"]["disclaimer"], ""]
+    if source:
+        out += ["## Where this came from", "",
+                f"{source['credit']} <{source['url']}>", "",
+                source["provenance"], "",
+                f"**What this project added.** {source['relationship']}", ""]
     out += ["## Evidence", ""]
     for ev in evidence:
         out += [f"### {ev['headline']}", "", ev["statement"], "",

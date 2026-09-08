@@ -19,6 +19,18 @@ url: "https://caffeinated1.github.io/configurationRotBot/"
 license: CC-BY-4.0
 version: "1.0.0"
 date-released: "2026-09-08"
+references:
+  - type: generic
+    title: "A town's first data center: what to require before saying yes"
+    notes: >-
+      The source document this guide is adapted from, published on LinkedIn and
+      described by its post as produced with AI assistance from data center
+      contracts. It names no citations; every claim carried forward here ships
+      with a way to verify it locally instead.
+    authors:
+      - name: "Mark Cuban"
+    url: "https://lnkd.in/p/e-Pbqzrm"
+    year: 2026
 keywords:
   - data centers
   - land use
