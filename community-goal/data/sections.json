@@ -1,0 +1,768 @@
+[
+  {
+    "id": "s1",
+    "number": 1,
+    "slug": "own-qualified-team",
+    "title": "Give the town its own qualified team, paid for by the applicant",
+    "summary": "The applicant arrives with counsel, engineers, and a communications plan. A town that reviews the proposal with volunteer board members and a part-time planner is not negotiating; it is receiving. Independent review, funded by the developer but directed by the town, closes that gap.",
+    "goal": "The town evaluates the proposal with expertise equal to the applicant's, and never misses a procedural step that could void the result.",
+    "requirements": [
+      {
+        "id": "s1-r1",
+        "title": "Retain independent advisers before making any commitment",
+        "detail": "A land use and utility lawyer, plus independent engineering, acoustical, hydrological, and financial advisers as the project requires. Retain them before any commitment is made, not after a proposal is on the table.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["process", "capacity"]
+      },
+      {
+        "id": "s1-r2",
+        "title": "Fund review through a developer-funded escrow the town controls",
+        "detail": "Where state law allows, require the developer to fund reasonable review costs through an escrow the town controls. The town selects the advisers, directs their work, and receives their conclusions. The developer funds the review and has no say in its findings.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement", "security"],
+        "tags": ["process", "money", "independence"],
+        "note": "This is routine practice for pipelines and mines, and nearly absent from data center practice."
+      },
+      {
+        "id": "s1-r3",
+        "title": "Assign one coordinating official, with a named backup",
+        "detail": "One person owns the process end to end. Name a backup at the same time, so nothing depends on a single person's availability across a multi-year review.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["permit"],
+        "tags": ["process"]
+      },
+      {
+        "id": "s1-r4",
+        "title": "Keep a public calendar of notices, hearings, and deadlines",
+        "detail": "Publish it and keep it current. The calendar is both a management tool and part of the record that the process was open.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["permit"],
+        "tags": ["process", "transparency"]
+      },
+      {
+        "id": "s1-r5",
+        "title": "Verify statutory notice in writing before every action that requires it",
+        "detail": "Confirm in writing, every time, that statutory notice was properly given. Notice failures destroy more deals than opposition does.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit"],
+        "tags": ["process", "legal-risk"],
+        "evidence": ["ev-notice-voided"],
+        "pitfall": "In one Virginia county, the largest data center rezoning in the country was voided by a court for defective notice after roughly twenty-seven hours of hearings. The county spent more than $1.7 million defending it and then withdrew."
+      },
+      {
+        "id": "s1-r6",
+        "title": "Identify every party: landowner, developer, operator, guarantor",
+        "detail": "Establish who owns the land, who develops it, who will operate the facility, and who is proposed as the financial guarantor. If the tenant is unknown, that is an unresolved condition, not a detail to be filled in later.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["agreement", "security"],
+        "tags": ["parties", "money"]
+      }
+    ]
+  },
+
+  {
+    "id": "s2",
+    "number": 2,
+    "slug": "site-suitability-first",
+    "title": "Decide whether the site works before you discuss benefits",
+    "summary": "Benefit negotiation is seductive and it happens too early. Site suitability is a separate question with a separate answer, and it should be settled first — because a payment cannot cure a physical impact.",
+    "goal": "The town establishes, on evidence, that the full build-out fits the site and the systems that serve it — before any number is discussed.",
+    "requirements": [
+      {
+        "id": "s2-r1",
+        "title": "Study the complete build-out, not the first building",
+        "detail": "Future phases, cooling equipment, generators, substations, transmission connections, and water infrastructure. The first building is not the project.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["permit", "zoning"],
+        "tags": ["siting", "scope"]
+      },
+      {
+        "id": "s2-r2",
+        "title": "Measure proximity to homes, schools, and hospitals",
+        "detail": "Establish actual distances to sensitive receivers across the full campus footprint, including equipment yards and generator locations, not just the property line.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["zoning"],
+        "tags": ["siting", "neighbors"]
+      },
+      {
+        "id": "s2-r3",
+        "title": "Test whether electric and water systems can carry this alongside approved growth",
+        "detail": "Ask whether the electric and water systems can carry this project alongside growth that has already been approved — and include other committed projects drawing on the same resources. Cumulative demand, not project-alone demand.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility", "monitoring"],
+        "tags": ["siting", "water", "power", "cumulative"]
+      },
+      {
+        "id": "s2-r4",
+        "title": "Assess roads, drainage, emergency services, farmland, and historic resources",
+        "detail": "Each of these is a separate public system with its own capacity and its own cost of failure. Assess them individually rather than as a single 'community impact' line.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["permit"],
+        "tags": ["siting", "public-services"]
+      },
+      {
+        "id": "s2-r5",
+        "title": "Name what the town gives up: land and interconnection capacity",
+        "detail": "What other uses of this land, and of this interconnection capacity, does the town forgo by approving? Interconnection capacity in particular is finite, queued, and not recoverable once assigned.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["permit"],
+        "tags": ["siting", "opportunity-cost"]
+      },
+      {
+        "id": "s2-r6",
+        "title": "Set separation distance as the primary protection",
+        "detail": "Separation distance is worth more than any mitigation requirement. Distance prevents the problem. Mitigation manages it, sometimes.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning"],
+        "tags": ["siting", "noise", "neighbors"],
+        "evidence": ["ev-zoned-too-close", "ev-mitigation-litigation"],
+        "pitfall": "The chief economic development officer of the country's largest data center county has acknowledged publicly that officials would do it differently, and that facilities were zoned too close to homes. Where a well-resourced operator installed acoustic mitigation in response to complaints, litigation over the same noise continued anyway."
+      },
+      {
+        "id": "s2-r7",
+        "title": "Refuse to trade a physical impact for a payment",
+        "detail": "A community payment cannot cure an unacceptable physical impact. If the site is wrong, no number fixes it. Decide suitability before the benefit conversation starts, so the two questions never get traded against each other.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "agreement"],
+        "tags": ["siting", "negotiation"]
+      }
+    ]
+  },
+
+  {
+    "id": "s3",
+    "number": 3,
+    "slug": "right-document",
+    "title": "Put each protection in the document that can actually carry it",
+    "summary": "Protections fail not because they were never agreed, but because they were written into an instrument that cannot enforce them. Six documents do six different jobs, and the split between them is legal, not stylistic.",
+    "goal": "Every protection sits in an instrument with the legal power to carry it, survives transfer and foreclosure, and does not promise anything the town lacks authority to deliver.",
+    "requirements": [
+      {
+        "id": "s3-r1",
+        "title": "Map every protection to the instrument that can carry it",
+        "detail": "Zoning and overlay standards set suitable locations, setbacks, height, buffers, and general performance standards. Site approval or a conditional use permit carries project-specific limits. A development or community agreement carries authorized payments and contractual remedies. Financial security instruments hold cash, escrow, or letters of credit. Utility agreements and regulatory filings handle service and cost allocation. A monitoring plan specifies equipment, methods, locations, reporting, and verification.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["zoning", "permit", "agreement", "security", "utility", "monitoring"],
+        "tags": ["legal", "structure"]
+      },
+      {
+        "id": "s3-r2",
+        "title": "Keep performance standards in the ordinance and money in a signed agreement",
+        "detail": "Demands for money or property as the price of a permit are treated as exactions and must bear an essential nexus and rough proportionality to the project's impacts — and the Supreme Court has held that putting the demand in a legislative act rather than an administrative condition does not by itself change that analysis. Ordinary regulation of how land is used — setbacks, decibel limits, use restrictions — is not analyzed that way. So: performance standards belong in the ordinance. Money belongs in an agreement the applicant signs voluntarily, supported by consideration.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "agreement"],
+        "tags": ["legal", "money", "exactions"]
+      },
+      {
+        "id": "s3-r3",
+        "title": "Confirm the town's authority to charge before designing a payment",
+        "detail": "Draft with counsel who can confirm the town has authority to charge it at all. Naming a payment a 'capacity fee' does not create the power to impose one.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["legal", "money"]
+      },
+      {
+        "id": "s3-r4",
+        "title": "Record land obligations, address transfers, and get lender subordination in writing",
+        "detail": "Record enforceable land obligations, address what happens on transfer, and obtain lender subordination in writing. Recording alone does not guarantee every obligation survives foreclosure or binds a future tenant.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement", "security"],
+        "tags": ["legal", "durability"]
+      },
+      {
+        "id": "s3-r5",
+        "title": "Do not promise to control electric service a state commission regulates",
+        "detail": "A commitment the town has no authority to keep is worse than no commitment: it substitutes for a protection that would have worked and collapses when tested.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["utility"],
+        "tags": ["legal", "power"]
+      }
+    ]
+  },
+
+  {
+    "id": "s4",
+    "number": 4,
+    "slug": "water-limits",
+    "title": "Set water limits from a defensible supply study",
+    "summary": "Water commitments fail on three predictable points: an annual cap with no peak limit, a label ('closed-loop') accepted in place of a metered number, and a fee that quietly converts a hard limit into a purchasable allowance.",
+    "goal": "Project water use is bounded by numbers the provider can defend during a drought, metered separately, verified independently, and curtailed before households are.",
+    "requirements": [
+      {
+        "id": "s4-r1",
+        "title": "Have the provider determine reliable supply under stress",
+        "detail": "What the water provider can reliably supply during drought and equipment outages, after existing commitments, environmental requirements, twenty years of expected growth, and an adequate reserve. That residual is the number the project is measured against.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility"],
+        "tags": ["water", "supply"]
+      },
+      {
+        "id": "s4-r2",
+        "title": "Set annual, peak-day, and peak-hour limits",
+        "detail": "An annual cap alone is useless — a facility can sit under it and still spike on the hottest day, which is when the system is least able to absorb it. All three limits, project-specific.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "utility"],
+        "tags": ["water", "limits"]
+      },
+      {
+        "id": "s4-r3",
+        "title": "Account separately for water consumed and water returned",
+        "detail": "Only consumption depletes the source. A withdrawal figure that ignores return flow overstates impact; a return figure that ignores evaporative loss understates it.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["monitoring"],
+        "tags": ["water", "measurement"]
+      },
+      {
+        "id": "s4-r4",
+        "title": "Regulate the heat-rejection method and the metered number, not the label",
+        "detail": "Do not accept 'closed-loop' as a water commitment. Closed-circuit systems can still reject heat evaporatively, and adiabatic assist consumes water on hot days precisely when supply is tight.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "monitoring"],
+        "tags": ["water", "cooling"]
+      },
+      {
+        "id": "s4-r5",
+        "title": "Require a drought operating plan before approval",
+        "detail": "Use the provider's actual declared stages. State when industrial cooling demand must decline, by how much, and how domestic and fire-protection service stays whole. Restriction of cooling load should precede restriction of households, and that sequence should be written down.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "utility"],
+        "tags": ["water", "drought", "priority"]
+      },
+      {
+        "id": "s4-r6",
+        "title": "Require separate metering, independent verification, and published reports",
+        "detail": "Separate metering of major uses including cooling, independent verification of the water balance, published usage reports, and retained raw data for audit.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["monitoring"],
+        "tags": ["water", "verification", "transparency"]
+      },
+      {
+        "id": "s4-r7",
+        "title": "Keep the excess-use charge a price signal, not permission",
+        "detail": "Paying an excess-use charge must not create a right to exceed a hard limit, and during declared drought the response is curtailment rather than a fee. Money does not create water.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["water", "enforcement"]
+      },
+      {
+        "id": "s4-r8",
+        "title": "Select any required retrofit on engineering evidence",
+        "detail": "Not on the assumption that one cooling technology always solves it. The right retrofit depends on the site, the climate, and the measured water balance.",
+        "type": "action",
+        "weight": 1,
+        "instruments": ["permit"],
+        "tags": ["water", "cooling"]
+      }
+    ]
+  },
+
+  {
+    "id": "s5",
+    "number": 5,
+    "slug": "noise-standards",
+    "title": "Protect neighbors from noise before the equipment is ordered",
+    "summary": "Noise is the most common post-approval complaint and the most active area of litigation. Ordinary local noise rules fail here for a specific technical reason, and a facility can comply with them and still be unlivable next door.",
+    "goal": "Noise standards written for this equipment, validated by an independent acoustical engineer, measured continuously, and enforceable through corrective plans rather than sensor-triggered penalties.",
+    "requirements": [
+      {
+        "id": "s5-r1",
+        "title": "Establish existing conditions over a continuous baseline period",
+        "detail": "An independent acoustical engineer establishes existing conditions over a continuous baseline period — not a spot check. Everything downstream is measured against this baseline.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["monitoring"],
+        "tags": ["noise", "baseline"]
+      },
+      {
+        "id": "s5-r2",
+        "title": "Model the full campus under demanding operating conditions",
+        "detail": "Not one building on a mild day. The model should reflect full build-out at high cooling load, which is when the equipment is loudest.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["monitoring", "permit"],
+        "tags": ["noise", "modeling"]
+      },
+      {
+        "id": "s5-r3",
+        "title": "Write standards that cover level, night, low frequency, tones, combined output, and generator testing",
+        "detail": "Overall level; nighttime conditions specifically; low-frequency content and audible tones; combined output from all equipment; and generator testing addressed separately from genuine emergencies.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "permit"],
+        "tags": ["noise", "standards"],
+        "evidence": ["ev-a-weighting", "ev-noise-class-actions"],
+        "pitfall": "A-weighting, used in nearly every local ordinance, discounts 63 Hz by 26.2 dB and 31.5 Hz by 39.4 dB. Those are exactly the frequencies chillers and fan walls produce, and exactly the frequencies that pass through walls into bedrooms. A facility can pass a 55 dBA limit comfortably and still be unlivable next door. Content below 20 Hz may not register on standard equipment at all."
+      },
+      {
+        "id": "s5-r4",
+        "title": "Give the engineer starting positions to validate, not thresholds to adopt",
+        "detail": "As drafting positions for the engineer to validate: a background-plus-5-dB standard measured in one-third-octave bands rather than a single broadband number; a low-frequency screen based on the difference between C-weighted and A-weighted readings; and a tonality penalty for prominent tones. These are drafting positions, not settled thresholds, and they need professional review before adoption.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["zoning"],
+        "tags": ["noise", "standards", "drafting"]
+      },
+      {
+        "id": "s5-r5",
+        "title": "Specify the measurement protocol in the ordinance",
+        "detail": "Measurement locations, weather conditions, instrument class, calibration intervals, and how unrelated sound such as traffic is excluded. An unspecified protocol turns every violation into an argument about method.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "monitoring"],
+        "tags": ["noise", "measurement"]
+      },
+      {
+        "id": "s5-r6",
+        "title": "Require continuous monitoring near sensitive receivers",
+        "detail": "Continuous monitoring is appropriate near sensitive receivers and is not expensive relative to project cost. Let the engineer set station count and locations, and obtain real estimates rather than adopting a number from a template.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["monitoring"],
+        "tags": ["noise", "monitoring"]
+      },
+      {
+        "id": "s5-r7",
+        "title": "Make an alert trigger verification and response, not an automatic charge",
+        "detail": "A monitoring alert should trigger prompt verification and a required response. It should not convert automatically into a large charge based on an unreviewed sensor reading — both because the reading may be wrong, and because a charge engineered to punish rather than to compensate is likely unenforceable as a contract term.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["agreement", "monitoring"],
+        "tags": ["noise", "enforcement", "legal"]
+      },
+      {
+        "id": "s5-r8",
+        "title": "Require commissioning tests before full operation",
+        "detail": "Test against the standard before the facility reaches full operation, while changes are still cheap and leverage still exists.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit"],
+        "tags": ["noise", "commissioning"]
+      },
+      {
+        "id": "s5-r9",
+        "title": "For persistent violations, require an engineered corrective plan on a deadline",
+        "detail": "And, where authorized, restrictions on the specific equipment or activity causing the problem. Operating restrictions are a legitimate tool because noise output tracks cooling load — but tie any reduction to measured compliance rather than assuming a fixed percentage cut delivers a fixed decibel result.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "agreement"],
+        "tags": ["noise", "enforcement"]
+      }
+    ]
+  },
+  {
+    "id": "s6",
+    "number": 6,
+    "slug": "on-site-generation",
+    "title": "Address on-site generation explicitly, or the rest fails",
+    "summary": "This is the loophole that has done the most damage in practice. Closing the rate loophole without closing the generation loophole converts a utility bill problem into an air quality problem with no permit attached.",
+    "goal": "On-site generation is defined, capped, permitted, and prohibited from serving primary load — before the certificate of occupancy is issued.",
+    "requirements": [
+      {
+        "id": "s6-r1",
+        "title": "Distinguish emergency backup from routine generation",
+        "detail": "The definitions do the work. 'Backup generation' that may run whenever the operator chooses is a power plant with a different label.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "permit"],
+        "tags": ["generation", "air", "definitions"],
+        "evidence": ["ev-self-generation"],
+        "pitfall": "One state enacted a law requiring large data centers to pay for the electrical infrastructure serving them and barring utilities from shifting those costs to other customers — and the same law permitted self-generation. The result at one campus was dozens of gas turbines running more than 500 megawatts of self-supplied load, in a community already carrying elevated health burdens, with the turbines unpermitted and litigation following."
+      },
+      {
+        "id": "s6-r2",
+        "title": "Cap annual run-hours",
+        "detail": "A stated number of hours per year, per unit and in aggregate, with reporting. Run-hours are the limit that makes the emergency/routine distinction measurable.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "monitoring"],
+        "tags": ["generation", "limits"]
+      },
+      {
+        "id": "s6-r3",
+        "title": "Require applicable air permits before the certificate of occupancy",
+        "detail": "Before, not after. A permit condition that can be satisfied later is a permit condition that can be litigated later.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit"],
+        "tags": ["generation", "air", "sequencing"]
+      },
+      {
+        "id": "s6-r4",
+        "title": "Set emissions standards for the units themselves",
+        "detail": "Unit-level standards, not a campus-wide aspiration. Specify what may be installed, not only how it may be operated.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["zoning", "permit"],
+        "tags": ["generation", "air"]
+      },
+      {
+        "id": "s6-r5",
+        "title": "Prohibit generation serving primary load",
+        "detail": "State it as a prohibition in the ordinance and repeat it as a covenant in the agreement. This is the single provision that keeps a data center from becoming an unpermitted merchant power plant.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["zoning", "agreement"],
+        "tags": ["generation", "air", "power"]
+      },
+      {
+        "id": "s6-r6",
+        "title": "Account for emissions, noise, fuel storage, and testing schedules",
+        "detail": "Generators are four separate impacts, and the testing schedule is the one neighbors experience most often. Set testing windows explicitly.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["permit", "monitoring"],
+        "tags": ["generation", "noise", "neighbors"]
+      },
+      {
+        "id": "s6-r7",
+        "title": "Make every demand-reduction commitment name its mechanism",
+        "detail": "Computing stops, batteries discharge, or generators start. Those are three different outcomes for the neighborhood, and a curtailment promise that does not say which one is not a commitment the town can evaluate.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility", "agreement"],
+        "tags": ["generation", "power", "definitions"]
+      }
+    ]
+  },
+
+  {
+    "id": "s7",
+    "number": 7,
+    "slug": "ratepayers-and-budget",
+    "title": "Protect electricity customers and the town budget as separate questions",
+    "summary": "Three questions do not answer each other, and the evidence on ratepayer harm is genuinely mixed. The defensible position is risk allocation, not proven harm — and it gets the town the same protections without a fight it can lose.",
+    "goal": "Infrastructure cost, cancellation exposure, and effects on other customers are each answered in writing by the utility and the regulator, with security in place before spending begins.",
+    "requirements": [
+      {
+        "id": "s7-r1",
+        "title": "Require the utility and regulator to answer three separate questions",
+        "detail": "Who pays for infrastructure built to serve this project. Who pays if the project cancels, ramps slowly, or closes. How the project affects other customers' prices and reliability. Each answer in writing, from the party with authority to give it.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility"],
+        "tags": ["power", "ratepayers", "cost-allocation"]
+      },
+      {
+        "id": "s7-r2",
+        "title": "Argue risk allocation, not proven harm",
+        "detail": "You are not claiming your bills already rose. You are declining to carry the risk of a stranded asset built on a forecast. That argument cannot be rebutted by a study, and it gets you the same protections.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["utility"],
+        "tags": ["power", "ratepayers", "advocacy"],
+        "evidence": ["ev-capacity-market", "ev-no-cost-shift", "ev-rate-drivers"],
+        "pitfall": "Be careful how you argue this publicly. Capacity market costs in one large regional market rose by billions with attributable bill impacts, while a study for the largest data center market in the world found no historical cost shift onto residential customers, and federal researchers attribute rising rates to equipment costs and an aging grid as well."
+      },
+      {
+        "id": "s7-r3",
+        "title": "Get credible demand commitments and security before project-specific spending",
+        "detail": "Before any infrastructure is built specifically to serve this project, the commitment behind it should be documented and secured.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility", "security"],
+        "tags": ["power", "security", "sequencing"]
+      },
+      {
+        "id": "s7-r4",
+        "title": "Negotiate minimum-bill and exit-fee terms with collateral",
+        "detail": "Terms without collateral are a promise from an entity that may not exist when the bill comes due.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["utility", "security"],
+        "tags": ["power", "money"]
+      },
+      {
+        "id": "s7-r5",
+        "title": "Match construction and interconnection dates to actual grid readiness",
+        "detail": "A facility energized ahead of the system that serves it either strands the investment or degrades reliability for everyone else.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["utility", "permit"],
+        "tags": ["power", "timing"]
+      },
+      {
+        "id": "s7-r6",
+        "title": "Intervene in the large-load tariff docket rather than replicating it locally",
+        "detail": "Many states have already adopted large-load tariffs doing exactly this. Intervening in that proceeding is cheaper, faster, and more durable than drafting a local substitute the town may lack authority to enforce.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["utility"],
+        "tags": ["power", "advocacy", "efficiency"]
+      }
+    ]
+  },
+
+  {
+    "id": "s8",
+    "number": 8,
+    "slug": "public-return",
+    "title": "Negotiate a public return you can defend in writing",
+    "summary": "Four categories of money get counted once each, incentives are evaluated against one-sided evidence, and the assessed value is protected before the facility empties out. Construction is where the jobs actually are.",
+    "goal": "A published, stress-tested account of what the public receives, net of incentives and public costs, with a valuation floor and labor standards that survive the facility's decline.",
+    "requirements": [
+      {
+        "id": "s8-r1",
+        "title": "Publish a stress-tested analysis of taxes and payments net of costs",
+        "detail": "Expected taxes and contractual payments, net of incentives and public costs, stress-tested for slow construction, declining equipment values, successful tax appeals, and early closure.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["money", "transparency", "fiscal"]
+      },
+      {
+        "id": "s8-r2",
+        "title": "Keep four money categories separate and never count a dollar twice",
+        "detail": "Ordinary taxes; reimbursement of project-caused costs; financial security for future obligations; and additional negotiated benefits. Combining them inflates the headline and hides which dollars are already spoken for.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["money", "fiscal", "accounting"]
+      },
+      {
+        "id": "s8-r3",
+        "title": "Default to no incentive; if political reality requires one, cap, sunset, and disclose it",
+        "detail": "Cap it at a stated cost per job, sunset it, and disclose the forgone revenue annually.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["money", "incentives"],
+        "evidence": ["ev-incentive-returns", "ev-billion-dollar-states", "ev-no-incentive-proceeded"],
+        "pitfall": "On incentives the evidence is one-sided. Several states that measured returns found they lose between 52 and 70 cents per dollar spent on data center sales tax exemptions. Four states are each losing more than a billion dollars a year. Two of the seven signed agreements in the benchmark gave no local incentive at all, and both projects proceeded."
+      },
+      {
+        "id": "s8-r4",
+        "title": "Negotiate a valuation floor with a waiver of appeal below it",
+        "detail": "When a facility empties, the owner appeals the assessment toward zero while the school district is still servicing bonds issued against the promised base. A negotiated valuation floor with a waiver of appeal below it is enforceable and almost never requested.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["money", "assessment", "schools"]
+      },
+      {
+        "id": "s8-r5",
+        "title": "Prefer a fixed annual payment over a share of reported profit",
+        "detail": "A fixed annual payment adjusted for defined capacity and inflation is easier to administer and harder to manipulate. Profit can be zero on paper for a decade, and a facility built for the owner's own use may generate no local revenue at all. Confirm the town's authority to impose it before designing around it.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["agreement"],
+        "tags": ["money", "structure"]
+      },
+      {
+        "id": "s8-r6",
+        "title": "Report construction employment separately from permanent employment",
+        "detail": "Construction is where the jobs actually are — a thousand or more workers for two to three years. Blending the two figures overstates the permanent workforce by an order of magnitude.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["agreement"],
+        "tags": ["jobs", "transparency"],
+        "evidence": ["ev-construction-jobs"]
+      },
+      {
+        "id": "s8-r7",
+        "title": "Negotiate construction labor standards where the jobs are",
+        "detail": "Prevailing wage, apprenticeship utilization, first-source referral, and certified payroll — negotiated on the construction phase, which is where the employment actually exists.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["agreement"],
+        "tags": ["jobs", "labor"]
+      },
+      {
+        "id": "s8-r8",
+        "title": "Prefer a community-directed training fund over a headcount promise",
+        "detail": "Be cautious with local-hire percentage mandates on private employment; they invite challenge, and a town that took no incentives has given up the usual defense. A training fund the community directs, with spending controls and measurable outcomes, is more durable than a headcount promise.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["agreement"],
+        "tags": ["jobs", "labor", "legal"]
+      }
+    ]
+  },
+
+  {
+    "id": "s9",
+    "number": 9,
+    "slug": "financial-protection",
+    "title": "Put financial protection in place before the exposure exists",
+    "summary": "Security has to precede the risk it covers, and the instrument's mechanics decide whether the town ever sees the money. The most common failure is not a refused draw — it is a quiet nonrenewal nobody noticed.",
+    "goal": "Every category of exposure is secured before it arises, in an instrument the town can actually draw on, backed by a named and verified guarantor that signs.",
+    "requirements": [
+      {
+        "id": "s9-r1",
+        "title": "Sequence security ahead of each exposure",
+        "detail": "Construction damage requires security before construction. Cancellation exposure requires security before infrastructure spending. Operating and closure obligations require security before operation.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["security", "sequencing"]
+      },
+      {
+        "id": "s9-r2",
+        "title": "Require decommissioning security set by an independent estimate",
+        "detail": "An independent estimate should set the amount, including contingency, and be updated as scope and costs change.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["security", "closure"],
+        "evidence": ["ev-no-decommissioning-security"],
+        "pitfall": "None of the seven signed agreements reviewed for this guide contained decommissioning security. Not one. That is roughly 3,600 acres and 18 million square feet with no funded path to removal."
+      },
+      {
+        "id": "s9-r3",
+        "title": "Prefer cash escrow or a clean standby letter of credit over a surety bond",
+        "detail": "Sureties contest claims. An instrument the town can draw on by presenting documents is worth more than a larger instrument that requires proving breach first.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["security", "instrument"]
+      },
+      {
+        "id": "s9-r4",
+        "title": "Specify letter-of-credit mechanics precisely",
+        "detail": "Banks examine the documents you present; they do not adjudicate whether the operator breached. So specify acceptable issuing banks, the exact draw certificate and its signatory, a notice-of-nonrenewal period long enough to act, and replacement security before expiration.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["security", "mechanics"]
+      },
+      {
+        "id": "s9-r5",
+        "title": "Assign a named official and backup to the renewal date",
+        "detail": "With independent calendar reminders. The common failure is not a refused draw. It is a quiet nonrenewal nobody noticed for eight months.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["security", "process"]
+      },
+      {
+        "id": "s9-r6",
+        "title": "Require replenishment after any draw",
+        "detail": "Otherwise the first draw exhausts the protection for every subsequent failure.",
+        "type": "commitment",
+        "weight": 2,
+        "instruments": ["security"],
+        "tags": ["security"]
+      },
+      {
+        "id": "s9-r7",
+        "title": "Preserve other lawful remedies expressly and reject sole-remedy clauses",
+        "detail": "Preserve other lawful remedies expressly, while preventing double recovery for the same loss.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement", "security"],
+        "tags": ["security", "legal", "remedies"],
+        "evidence": ["ev-sole-remedy"],
+        "pitfall": "One reviewed agreement made drawing the letter of credit the city's sole remedy, which turned a $20 million protection into a $20 million ceiling on a project costing roughly $10 billion."
+      },
+      {
+        "id": "s9-r8",
+        "title": "Name the guarantor, verify its finances, and require it to sign",
+        "detail": "Identify who pays if the project company cannot. A well-known tenant's name on a press release is not a guarantee.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security", "agreement"],
+        "tags": ["security", "parties"]
+      }
+    ]
+  },
+
+  {
+    "id": "s10",
+    "number": 10,
+    "slug": "phasing-and-closure",
+    "title": "Approve in stages, and write the closure terms first",
+    "summary": "The equipment inside is obsolete in roughly four to six years; the shell lasts thirty. Every agreement in the benchmark was written for a facility that underperforms. None was written for one that empties out.",
+    "goal": "Entitlement is granted in stages that keep leverage alive, and the ending is written, triggered objectively, and funded in advance.",
+    "requirements": [
+      {
+        "id": "s10-r1",
+        "title": "Define what each phase may build and operate",
+        "detail": "Phase boundaries stated in the approval, not left to interpretation at the building permit counter.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit"],
+        "tags": ["phasing"]
+      },
+      {
+        "id": "s10-r2",
+        "title": "Condition later phases on demonstrated compliance and confirmed capacity",
+        "detail": "Compliance with the noise, water, and generation standards already in place, and confirmed infrastructure capacity for the next increment.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit"],
+        "tags": ["phasing", "enforcement"]
+      },
+      {
+        "id": "s10-r3",
+        "title": "Do not rely on future discretionary approvals you have already granted away",
+        "detail": "A vested right you gave away is not leverage you still hold. If the entitlement is granted, the later approval is administrative, whatever the staff report says.",
+        "type": "action",
+        "weight": 3,
+        "instruments": ["permit", "zoning"],
+        "tags": ["phasing", "leverage", "legal"]
+      },
+      {
+        "id": "s10-r4",
+        "title": "Require a closure plan covering removal, hazards, stabilization, and unpaid obligations",
+        "detail": "Equipment removal, hazardous materials, site stabilization, and unpaid public obligations. Written before approval, not negotiated during decline.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["permit", "agreement"],
+        "tags": ["closure"],
+        "evidence": ["ev-equipment-life"]
+      },
+      {
+        "id": "s10-r5",
+        "title": "Set an objective closure trigger measured at the utility meter",
+        "detail": "Sustained load below a defined threshold for a defined period is measurable from the utility meter and is not a matter of opinion.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["agreement", "monitoring"],
+        "tags": ["closure", "measurement"]
+      },
+      {
+        "id": "s10-r6",
+        "title": "Fund closure in advance",
+        "detail": "A closure obligation without funding is a claim against an entity that, by the time it matters, has no reason to pay.",
+        "type": "commitment",
+        "weight": 3,
+        "instruments": ["security"],
+        "tags": ["closure", "security"]
+      },
+      {
+        "id": "s10-r7",
+        "title": "Consider a ground lease if the town owns the land",
+        "detail": "Reversion is stronger than any bond. But reversion delivers a building and its liabilities. It is useful only with due diligence, access rights, environmental protections, and funded closure obligations attached.",
+        "type": "action",
+        "weight": 2,
+        "instruments": ["agreement"],
+        "tags": ["closure", "structure"]
+      }
+    ]
+  }
+]

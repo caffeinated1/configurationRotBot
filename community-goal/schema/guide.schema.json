@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caffeinated1.github.io/configurationRotBot/schema/guide.schema.json",
+  "title": "Community Goal guide data",
+  "description": "Shape of the three files in community-goal/data/. build.py enforces the cross-reference rules this schema cannot express (evidence ids resolve, requirement ids are prefixed with their section).",
+  "type": "object",
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "required": ["id", "title", "detail", "type", "weight", "instruments", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^s([1-9]|10)-r[0-9]+$" },
+        "title": { "type": "string", "minLength": 8 },
+        "detail": { "type": "string", "minLength": 20 },
+        "type": {
+          "enum": ["action", "commitment"],
+          "description": "A commitment is scored against the four pillars of the basic rule; an action is done or not."
+        },
+        "weight": { "enum": [1, 2, 3], "description": "3 critical, 2 important, 1 supporting" },
+        "instruments": {
+          "type": "array",
+          "items": { "enum": ["zoning", "permit", "agreement", "security", "utility", "monitoring"] }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "pitfall": { "type": "string", "description": "What went wrong somewhere this was missing." },
+        "note": { "type": "string" }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["id", "number", "slug", "title", "summary", "goal", "requirements"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^s([1-9]|10)$" },
+        "number": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "goal": { "type": "string" },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/requirement" }
+        }
+      }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": ["id", "headline", "statement", "topic", "sections", "use", "verify"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^ev-[a-z0-9-]+$" },
+        "headline": { "type": "string" },
+        "statement": { "type": "string" },
+        "topic": { "type": "string" },
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "use": { "type": "string", "description": "What the claim is good for in a hearing." },
+        "verify": { "type": "string", "description": "How a community checks it against its own jurisdiction." }
+      }
+    }
+  },
+  "properties": {
+    "sections": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/section" } },
+    "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidenceItem" } }
+  }
+}

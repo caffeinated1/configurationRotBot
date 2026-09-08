@@ -321,6 +321,22 @@ Next up: JVM, Ruby and PHP detectors, per-workspace monorepo scoring, and
 Terraform and Kubernetes. Roadmap and open design questions are in
 [SPEC.md](SPEC.md#8-roadmap).
 
+## Also in this repository: Community Goal
+
+[`community-goal/`](community-goal/README.md) is a separate deliverable that
+shares this repository's stdlib-only, no-dependency approach: an interactive
+site and open JSON API built from a civic guide, *"A town's first data center:
+what to require before saying yes."*
+
+- **Site:** https://caffeinated1.github.io/configurationRotBot/
+- **API:** `api/v1/` — 10 sections, 71 requirements, 18 checkable claims, all
+  static JSON, no key and no rate limit.
+
+It answers a different question than the scanner does — what a community should
+require before approving a data center, and how much of that is actually
+written down — but the shape is the same: data as the source of truth, a build
+that fails on a broken reference, and no runtime to keep alive.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
