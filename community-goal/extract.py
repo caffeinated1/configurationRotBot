@@ -190,13 +190,6 @@ def fix_pages_workflow(text: str) -> str:
         "# a contributed data file fails review rather than production.")
     text = text.replace("        run: python3 tests/test_community_goal.py",
                         "        run: python3 tests/test_guide.py")
-    # The generic rewrite has already run, so match the lifted form.
-    text = re.sub(
-        r" *python3 build\.py \\\n"
-        r" *--dist dist \\\n"
-        r" *--base-url \"\$\{\{ steps\.pages\.outputs\.base_url \}\}\"",
-        '          python3 build.py --dist dist '
-        '--base-url "${{ steps.pages.outputs.base_url }}"', text)
     return text.replace("          path: community-goal/dist", "          path: dist")
 
 

@@ -30,7 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: read
+      # write, not read: the resolve step below turns Pages on the first time it
+      # runs, so publishing needs no click in repository settings.
+      pages: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -44,13 +46,36 @@ jobs:
 
       - name: Resolve the public base URL
         id: pages
+        # enablement turns Pages on if it is off, so the first deploy does not
+        # depend on someone finding a settings page.
+        #
+        # continue-on-error because a pull request must not fail over a
+        # repository setting: PR builds prove the data is sound and deploy
+        # nothing, so the fallback URL below is good enough for them.
+        continue-on-error: true
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Pick the base URL
+        id: base
+        run: |
+          url="${{ steps.pages.outputs.base_url }}"
+          if [ -z "$url" ]; then
+            # Pages could not be resolved (usually: not enabled yet, on a PR
+            # build). Fall back to the address Pages will use for this
+            # repository so generated links are still right.
+            owner=$(echo "${{ github.repository_owner }}" | tr "[:upper:]" "[:lower:]")
+            url="https://${owner}.github.io/${{ github.event.repository.name }}"
+            echo "Pages not resolved; falling back to $url"
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Build the API and site
         run: |
           python3 community-goal/build.py \
             --dist community-goal/dist \
-            --base-url "${{ steps.pages.outputs.base_url }}"
+            --base-url "${{ steps.base.outputs.url }}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

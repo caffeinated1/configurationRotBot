@@ -338,7 +338,8 @@ class ExtractionTests(unittest.TestCase):
 
     def test_workflows_build_from_the_root(self) -> None:
         pages = (self.dest / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
-        self.assertIn("python3 build.py --dist dist", pages)
+        self.assertIn("python3 build.py", pages)
+        self.assertIn("--dist dist", pages)
         self.assertIn("path: dist", pages)
         self.assertNotIn("community-goal/", pages)
         # Pull requests must still build without deploying.
