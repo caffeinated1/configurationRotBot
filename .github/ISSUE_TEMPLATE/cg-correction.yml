@@ -1,0 +1,49 @@
+name: "Community Goal — correct something"
+description: A wrong figure, a legal statement that doesn't hold, a requirement in the wrong place.
+title: "[correction] "
+labels: ["community-goal", "correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Corrections outrank additions here. If something is wrong, saying so is a
+        contribution even if you cannot supply the right answer.
+  - type: input
+    id: requirement
+    attributes:
+      label: What is wrong
+      description: >
+        A requirement id (`s9-r2`), an evidence id (`ev-…`), a jurisdiction
+        overlay, or a quote from the page.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong with it
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What it should say
+      description: If you know. "I don't know, but this isn't right" is still worth filing.
+  - type: textarea
+    id: basis
+    attributes:
+      label: What you're going on
+      description: >
+        A source if you have one — or your own position, if that is the evidence.
+        "I am the zoning administrator and this is not how it works here" counts.
+  - type: input
+    id: jurisdiction
+    attributes:
+      label: Where this applies
+      description: >
+        If the problem is that the statement is only wrong in your state, that is
+        an overlay rather than a correction — say so and we'll retarget it.
+  - type: input
+    id: interest
+    attributes:
+      label: Material interest, if any
+      description: Per GOVERNANCE.md. Leave blank if none.

@@ -39,10 +39,10 @@ class SourceDataTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.guide, cls.sections, cls.evidence = builder.load()
+        cls.guide, cls.sections, cls.evidence, cls.jurisdictions = builder.load()
 
     def test_validation_passes(self) -> None:
-        builder.validate(self.guide, self.sections, self.evidence)
+        builder.validate(self.guide, self.sections, self.evidence, self.jurisdictions)
 
     def test_ten_sections_numbered_in_order(self) -> None:
         self.assertEqual([s["number"] for s in self.sections], list(range(1, 11)))
@@ -73,6 +73,45 @@ class SourceDataTests(unittest.TestCase):
         orphans = {e["id"] for e in self.evidence} - referenced
         self.assertEqual(orphans, set(), "evidence not cited anywhere: %s" % sorted(orphans))
 
+    def test_evidence_sources_are_checkable_when_present(self) -> None:
+        for item in self.evidence:
+            for src in item.get("sources", []):
+                for field in ("title", "publisher", "url"):
+                    self.assertTrue(str(src.get(field, "")).strip(),
+                                    "%s source missing %s" % (item["id"], field))
+                self.assertTrue(src["url"].startswith("https://"), item["id"])
+
+    def test_a_bare_link_is_not_accepted_as_a_source(self) -> None:
+        evidence = json.loads(json.dumps(self.evidence))
+        evidence[0]["sources"] = [{"url": "https://example.test/report.pdf"}]
+        with self.assertRaises(builder.BuildError):
+            builder.validate(self.guide, self.sections, evidence, self.jurisdictions)
+
+    def test_overlays_annotate_requirements_that_exist(self) -> None:
+        ids = {r["id"] for s in self.sections for r in s["requirements"]}
+        for jur in self.jurisdictions:
+            self.assertTrue(jur["notes"], "%s annotates nothing" % jur["id"])
+            for rid in jur["notes"]:
+                self.assertIn(rid, ids, "%s annotates unknown %s" % (jur["id"], rid))
+
+    def test_every_overlay_names_a_maintainer(self) -> None:
+        # An overlay nobody maintains goes stale silently, and stale law is
+        # worse than no law.
+        for jur in self.jurisdictions:
+            self.assertTrue(jur.get("maintainers"), jur["id"])
+
+    def test_overlay_annotating_a_missing_requirement_fails(self) -> None:
+        jurisdictions = json.loads(json.dumps(self.jurisdictions))
+        jurisdictions[0]["notes"]["s4-r404"] = {"note": "nope"}
+        with self.assertRaises(builder.BuildError):
+            builder.validate(self.guide, self.sections, self.evidence, jurisdictions)
+
+    def test_unmaintained_overlay_fails(self) -> None:
+        jurisdictions = json.loads(json.dumps(self.jurisdictions))
+        jurisdictions[0]["maintainers"] = []
+        with self.assertRaises(builder.BuildError):
+            builder.validate(self.guide, self.sections, self.evidence, jurisdictions)
+
     def test_the_four_pillars_are_intact(self) -> None:
         ids = [p["id"] for p in self.guide["basic_rule"]["pillars"]]
         self.assertEqual(ids, ["limit", "verification", "party", "remedy"])
@@ -81,13 +120,13 @@ class SourceDataTests(unittest.TestCase):
         sections = json.loads(json.dumps(self.sections))
         sections[0]["requirements"][0]["evidence"] = ["ev-does-not-exist"]
         with self.assertRaises(builder.BuildError):
-            builder.validate(self.guide, sections, self.evidence)
+            builder.validate(self.guide, sections, self.evidence, self.jurisdictions)
 
     def test_misfiled_requirement_id_fails_validation(self) -> None:
         sections = json.loads(json.dumps(self.sections))
         sections[1]["requirements"][0]["id"] = "s9-r99"
         with self.assertRaises(builder.BuildError):
-            builder.validate(self.guide, sections, self.evidence)
+            builder.validate(self.guide, sections, self.evidence, self.jurisdictions)
 
 
 class BuildTests(unittest.TestCase):
@@ -207,6 +246,32 @@ class BuildTests(unittest.TestCase):
         self.assertIn("api/v1", app)
         self.assertIn("guide.json", app)
 
+    def test_jurisdiction_endpoints_exist_and_agree_with_the_index(self) -> None:
+        index = read(os.path.join(self.api, "jurisdictions.json"))
+        self.assertEqual(index["count"], len(index["jurisdictions"]))
+        for entry in index["jurisdictions"]:
+            path = os.path.join(self.api, "jurisdictions", entry["id"] + ".json")
+            self.assertTrue(os.path.isfile(path), entry["id"])
+            overlay = read(path)["jurisdiction"]
+            self.assertEqual(sorted(overlay["notes"]), entry["annotates"])
+
+    def test_coverage_is_published_and_accurate(self) -> None:
+        coverage = read(os.path.join(self.api, "coverage.json"))["citation_coverage"]
+        evidence = read(os.path.join(self.api, "evidence.json"))["evidence"]
+        cited = [e for e in evidence if e.get("sources")]
+        self.assertEqual(coverage["claims"], len(evidence))
+        self.assertEqual(coverage["cited"], len(cited))
+        self.assertEqual(coverage["uncited"], len(evidence) - len(cited))
+        self.assertEqual(sorted(coverage["uncited_ids"]),
+                         sorted(e["id"] for e in evidence if not e.get("sources")))
+
+    def test_markdown_flags_uncited_claims_instead_of_hiding_them(self) -> None:
+        with open(os.path.join(self.api, "guide.md"), encoding="utf-8") as handle:
+            text = handle.read()
+        evidence = read(os.path.join(self.api, "evidence.json"))["evidence"]
+        if any(not e.get("sources") for e in evidence):
+            self.assertIn("No primary source recorded yet", text)
+
     def test_rebuild_is_clean(self) -> None:
         # A stale file left behind by an earlier build would still be published.
         stray = os.path.join(self.dist, "api", "v1", "stale.json")
@@ -238,6 +303,32 @@ class SiteTests(unittest.TestCase):
         ids = set(re.findall(r'id="([^"]+)"', self.html))
         for used in set(re.findall(r"\$\('#([a-z0-9-]+)'\)", self.app)):
             self.assertIn(used, ids, "app.js addresses #%s, which the page never defines" % used)
+
+    def test_issue_forms_the_site_links_to_actually_exist(self) -> None:
+        # The site deep-links prefilled issue forms by filename. A renamed form
+        # would send a contributor to a 404 with no error anywhere in the build.
+        guide = read(os.path.join(GOAL, "data", "guide.json"))
+        forms = guide["meta"]["project"]["forms"]
+        self.assertTrue(forms, "no contribution forms declared")
+        for kind, url in forms.items():
+            name = url.rsplit("template=", 1)[-1]
+            path = os.path.join(ROOT, ".github", "ISSUE_TEMPLATE", name)
+            self.assertTrue(os.path.isfile(path),
+                            "%s form points at missing %s" % (kind, name))
+
+    def test_contribution_docs_exist_where_the_site_says_they_do(self) -> None:
+        for name in ("CONTRIBUTING.md", "GOVERNANCE.md", "README.md"):
+            self.assertTrue(os.path.isfile(os.path.join(GOAL, name)), name)
+        self.assertTrue(os.path.isfile(os.path.join(ROOT, "CODE_OF_CONDUCT.md")))
+        self.assertTrue(os.path.isfile(os.path.join(ROOT, "CITATION.cff")))
+
+    def test_external_links_open_safely(self) -> None:
+        # Contributed overlays and sources render as links; every one that opens
+        # a new tab needs rel=noopener.
+        for match in re.finditer(r"target=\\?['\"]_blank", self.app):
+            window = self.app[max(0, match.start() - 200):match.end() + 120]
+            self.assertIn("noopener", window,
+                          "target=_blank without rel=noopener near: %s" % window[-120:])
 
     def test_storage_access_is_guarded(self) -> None:
         # Blocked storage (private windows, hardened browsers) must not break the page.

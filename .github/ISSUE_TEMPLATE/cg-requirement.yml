@@ -1,0 +1,82 @@
+name: "Community Goal — propose a requirement"
+description: Something the guide misses, or a protection that failed in practice.
+title: "[requirement] "
+labels: ["community-goal", "requirement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the guide's search first — there are 71 requirements and yours may
+        already be in there under different words.
+
+        A proposal is far stronger with a failure mode attached. "Require X"
+        invites debate; "here is what happened to a town that did not require X"
+        ends it.
+  - type: input
+    id: title
+    attributes:
+      label: The requirement, in one line
+      description: Written as an imperative, the way the existing ones are.
+    validations:
+      required: true
+  - type: dropdown
+    id: section
+    attributes:
+      label: Which section it belongs to
+      options:
+        - "1 — the town's own qualified team"
+        - "2 — site suitability before benefits"
+        - "3 — the right document for each protection"
+        - "4 — water limits"
+        - "5 — noise"
+        - "6 — on-site generation"
+        - "7 — electricity customers and the town budget"
+        - "8 — public return"
+        - "9 — financial protection"
+        - "10 — phasing and closure"
+        - "none of these — it needs a new section"
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: What to require, and why
+      description: Two or three sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: pitfall
+    attributes:
+      label: What goes wrong without it
+      description: >
+        The most useful field in the file. What was promised, what was missing
+        from the promise, and what it cost. Name the place if it is public.
+  - type: dropdown
+    id: instruments
+    attributes:
+      label: Which document can carry it
+      multiple: true
+      options:
+        - Zoning and overlay standards
+        - Site approval or conditional use permit
+        - Development or community agreement
+        - Financial security instruments
+        - Utility agreements and regulatory filings
+        - Monitoring plan
+    validations:
+      required: true
+  - type: dropdown
+    id: weight
+    attributes:
+      label: How important
+      options:
+        - "critical — a town that misses this has no protection"
+        - "important — materially weakens the deal if missing"
+        - "supporting — good practice"
+    validations:
+      required: true
+  - type: input
+    id: interest
+    attributes:
+      label: Material interest, if any
+      description: Per GOVERNANCE.md. Leave blank if none.

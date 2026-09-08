@@ -337,6 +337,17 @@ require before approving a data center, and how much of that is actually
 written down — but the shape is the same: data as the source of truth, a build
 that fails on a broken reference, and no runtime to keep alive.
 
+**It is open to contributors who are not developers**, which is most of the
+people who know this subject: town and county staff, planning boards, state
+agencies, consumer advocates, NGOs, law school clinics, engineers, and land use
+counsel. The two highest-leverage contributions are citing a claim (18 of 18
+carry no primary source, and coverage is published rather than hidden) and
+adding a jurisdiction overlay that attaches your local statutes to the
+requirements they govern. Issue forms cover both without touching JSON. See
+[`community-goal/CONTRIBUTING.md`](community-goal/CONTRIBUTING.md) and
+[`community-goal/GOVERNANCE.md`](community-goal/GOVERNANCE.md), which sets the
+conflict-of-interest rule everyone works under.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

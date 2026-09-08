@@ -30,6 +30,7 @@
       <button class="view-tab" data-view="readiness">Readiness</button>
       <button class="view-tab" data-view="evidence">Evidence</button>
       <button class="view-tab" data-view="api">API</button>
+      <button class="view-tab" data-view="contribute">Contribute</button>
     </nav>
 
     <div class="topbar-actions">
@@ -77,6 +78,12 @@
     <div class="layout">
       <aside class="sidebar" aria-label="Contents">
         <div class="sidebar-inner">
+          <label class="picker">
+            <span class="picker-label">Local overlay</span>
+            <select id="jurisdiction-select">
+              <option value="">None — the shared guide</option>
+            </select>
+          </label>
           <label class="search">
             <span class="visually-hidden">Search the guide</span>
             <input type="search" id="search-input" placeholder="Search requirements…" autocomplete="off">
@@ -91,6 +98,7 @@
 
       <div class="content">
         <div class="search-results" id="search-results" hidden></div>
+        <div class="overlay-banner" id="overlay-banner" hidden></div>
         <div id="sections"></div>
 
         <section class="closing" id="closing">
@@ -188,6 +196,31 @@
         <pre class="api-body"><code id="api-body">Choose an endpoint to see its response.</code></pre>
       </div>
     </div>
+  </section>
+  <!-- ── Contribute ────────────────────────────────────────────────── -->
+  <section class="view" id="view-contribute" hidden>
+    <div class="readiness-head">
+      <h1>Contribute</h1>
+      <p class="lede">
+        This guide is only as good as the people who correct it. It is open to
+        residents, town staff, NGOs, agencies, planners, and practitioners — and the
+        contributions that matter most need no code at all.
+      </p>
+    </div>
+
+    <div class="coverage-card" id="coverage-card"></div>
+
+    <h2 class="section-break">Four ways in</h2>
+    <div class="contribute-grid" id="contribute-grid"></div>
+
+    <h2 class="section-break">Local overlays <span class="count-badge" id="overlay-count"></span></h2>
+    <p class="muted" id="overlay-how"></p>
+    <div class="overlay-grid" id="overlay-grid"></div>
+
+    <h2 class="section-break">Ground rules</h2>
+    <div class="rules-grid" id="rules-grid"></div>
+
+    <div class="licence-note" id="licence-note"></div>
   </section>
 </main>
 

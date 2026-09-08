@@ -4,19 +4,41 @@
     "version": "1.0.0",
     "title": "A town's first data center: what to require before saying yes",
     "subtitle": "A requirements guide for local officials, planning boards, and residents facing a first data center proposal.",
-    "audience": ["town councils", "planning boards", "zoning boards", "residents", "county supervisors"],
-    "license": "CC BY 4.0",
+    "audience": [
+      "town councils",
+      "planning boards",
+      "zoning boards",
+      "residents",
+      "county supervisors"
+    ],
+    "project": {
+      "repository": "https://github.com/caffeinated1/configurationRotBot",
+      "directory": "community-goal",
+      "issues": "https://github.com/caffeinated1/configurationRotBot/issues",
+      "contributing": "https://github.com/caffeinated1/configurationRotBot/blob/main/community-goal/CONTRIBUTING.md",
+      "governance": "https://github.com/caffeinated1/configurationRotBot/blob/main/community-goal/GOVERNANCE.md",
+      "forms": {
+        "requirement": "https://github.com/caffeinated1/configurationRotBot/issues/new?template=cg-requirement.yml",
+        "source": "https://github.com/caffeinated1/configurationRotBot/issues/new?template=cg-source.yml",
+        "jurisdiction": "https://github.com/caffeinated1/configurationRotBot/issues/new?template=cg-jurisdiction.yml",
+        "correction": "https://github.com/caffeinated1/configurationRotBot/issues/new?template=cg-correction.yml"
+      }
+    },
+    "license": {
+      "content": "CC-BY-4.0",
+      "code": "MIT",
+      "attribution": "Community Goal — a town's first data center (github.com/caffeinated1/configurationRotBot), CC BY 4.0"
+    },
+    "contributions": "Open to anyone: residents, town staff, NGOs, agencies, and practitioners. Contributions are accepted under CC BY 4.0 for content and MIT for code, and contributors disclose any interest in a data center project. See GOVERNANCE.md.",
     "source_note": "Content is a structured rendering of the source guide. Figures and case references are reproduced as stated in the source document; the source does not name its citations, so treat every figure as a claim to verify locally before relying on it in a hearing.",
     "disclaimer": "This is not legal advice. Authority for zoning conditions, exactions, payments, and utility commitments varies by state. Confirm every item with counsel licensed in your jurisdiction."
   },
-
   "goal": {
     "statement": "Before the final vote, the town should be able to tell residents in plain language: what will be built, what it will consume, what the public receives, what happens if it fails, who enforces the agreement, and who pays to take it down.",
     "rule": "If any of those answers is incomplete, resolve it before granting the approval that spends the last of the town's leverage.",
     "why_it_matters": "A data center can bring construction employment, tax base, and infrastructure investment. It can also impose demands on electricity, water, public services, and nearby neighborhoods that last for decades and outlive the equipment inside.",
     "posture": "No agreement prevents disputes from reaching court. The goal is to resolve routine problems in days, and to have money and legal authority already in place for the serious ones."
   },
-
   "framing": {
     "heading": "Two facts should frame everything",
     "facts": [
@@ -35,7 +57,6 @@
     ],
     "conclusion": "You are usually not paying for something that would otherwise not happen."
   },
-
   "basic_rule": {
     "statement": "Every important promise needs a stated limit, a reliable way to check it, a responsible party with money behind it, and a practical response when it is broken.",
     "pillars": [
@@ -65,52 +86,120 @@
       }
     ]
   },
-
   "instruments": [
     {
       "id": "zoning",
       "name": "Zoning and overlay standards",
       "purpose": "Suitable locations, setbacks, height, buffers, general performance standards",
-      "carries": ["separation distance", "noise standards", "height and buffer requirements", "use restrictions"]
+      "carries": [
+        "separation distance",
+        "noise standards",
+        "height and buffer requirements",
+        "use restrictions"
+      ]
     },
     {
       "id": "permit",
       "name": "Site approval or conditional use permit",
       "purpose": "Project-specific limits and conditions",
-      "carries": ["phase definitions", "project-specific caps", "conditions precedent to occupancy"]
+      "carries": [
+        "phase definitions",
+        "project-specific caps",
+        "conditions precedent to occupancy"
+      ]
     },
     {
       "id": "agreement",
       "name": "Development or community agreement",
       "purpose": "Authorized payments, responsibilities, contractual remedies",
-      "carries": ["negotiated payments", "labor standards", "valuation floor", "contractual remedies"]
+      "carries": [
+        "negotiated payments",
+        "labor standards",
+        "valuation floor",
+        "contractual remedies"
+      ]
     },
     {
       "id": "security",
       "name": "Financial security instruments",
       "purpose": "Cash, escrow, or letters of credit for defined defaults and closure",
-      "carries": ["construction damage security", "cancellation exposure", "decommissioning funding"]
+      "carries": [
+        "construction damage security",
+        "cancellation exposure",
+        "decommissioning funding"
+      ]
     },
     {
       "id": "utility",
       "name": "Utility agreements and regulatory filings",
       "purpose": "Service, infrastructure cost allocation, reliability, customer exposure",
-      "carries": ["cost allocation", "minimum bill and exit fees", "interconnection timing"]
+      "carries": [
+        "cost allocation",
+        "minimum bill and exit fees",
+        "interconnection timing"
+      ]
     },
     {
       "id": "monitoring",
       "name": "Monitoring plan",
       "purpose": "Equipment, methods, locations, reporting, verification",
-      "carries": ["noise monitoring stations", "water metering and balance", "published usage reports"]
+      "carries": [
+        "noise monitoring stations",
+        "water metering and balance",
+        "published usage reports"
+      ]
     }
   ],
-
   "final_questions": [
-    { "id": "q-built", "question": "What will be built?", "sections": ["s2", "s10"] },
-    { "id": "q-consume", "question": "What will it consume?", "sections": ["s4", "s6", "s7"] },
-    { "id": "q-receives", "question": "What does the public receive?", "sections": ["s8"] },
-    { "id": "q-fails", "question": "What happens if it fails?", "sections": ["s7", "s9", "s10"] },
-    { "id": "q-enforces", "question": "Who enforces the agreement?", "sections": ["s1", "s3", "s5"] },
-    { "id": "q-teardown", "question": "Who pays to take it down?", "sections": ["s9", "s10"] }
+    {
+      "id": "q-built",
+      "question": "What will be built?",
+      "sections": [
+        "s2",
+        "s10"
+      ]
+    },
+    {
+      "id": "q-consume",
+      "question": "What will it consume?",
+      "sections": [
+        "s4",
+        "s6",
+        "s7"
+      ]
+    },
+    {
+      "id": "q-receives",
+      "question": "What does the public receive?",
+      "sections": [
+        "s8"
+      ]
+    },
+    {
+      "id": "q-fails",
+      "question": "What happens if it fails?",
+      "sections": [
+        "s7",
+        "s9",
+        "s10"
+      ]
+    },
+    {
+      "id": "q-enforces",
+      "question": "Who enforces the agreement?",
+      "sections": [
+        "s1",
+        "s3",
+        "s5"
+      ]
+    },
+    {
+      "id": "q-teardown",
+      "question": "Who pays to take it down?",
+      "sections": [
+        "s9",
+        "s10"
+      ]
+    }
   ]
 }

@@ -11,6 +11,7 @@
   const API_BASE = 'api/v1';
   const STORE_KEY = 'community-goal:assessment:v1';
   const THEME_KEY = 'community-goal:theme';
+  const OVERLAY_KEY = 'community-goal:jurisdiction';
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -23,6 +24,7 @@
   let reqIndex = new Map();  // requirement id -> requirement
   let state = load();        // id -> { pillars: {}, done: bool, notes: string }
   let filters = { instrument: null, criticalOnly: false, gapsOnly: false };
+  let overlay = null;           // the selected jurisdiction overlay, if any
 
   /* ── storage ──────────────────────────────────────────────────── */
 
@@ -111,11 +113,13 @@
     renderGuide();
     renderEvidence();
     renderApi();
+    renderContribute();
     wireChrome();
     refreshScores();
 
     const view = new URLSearchParams(location.search).get('view');
-    setView(['guide', 'readiness', 'evidence', 'api'].includes(view) ? view : 'guide');
+    setView(['guide', 'readiness', 'evidence', 'api', 'contribute'].includes(view)
+      ? view : 'guide');
     if (location.hash) {
       const target = document.getElementById(location.hash.slice(1));
       if (target) target.scrollIntoView();
@@ -204,6 +208,7 @@
     $('#sections').innerHTML = guide.sections.map(renderSection).join('');
     wireGuideEvents();
     observeSections();
+    renderOverlayPicker();
   }
 
   function renderSection(section) {
@@ -244,6 +249,7 @@
         </div>
         ${req.pitfall ? `<div class="pitfall"><strong>What went wrong elsewhere</strong>${esc(req.pitfall)}</div>` : ''}
         ${req.note ? `<div class="note">${esc(req.note)}</div>` : ''}
+        <div class="local-note" data-local="${req.id}" hidden></div>
         <div class="req-assess">
           <div class="assess-label">${req.type === 'commitment'
             ? 'Assess against the basic rule' : 'Mark when done'}</div>
@@ -252,6 +258,8 @@
             placeholder="Where does this live — ordinance section, agreement clause, who owns it?"></textarea>
           ${instruments.length ? `<p class="instrument-hint">Carried by:
             ${instruments.map((i) => esc(i.name)).join(' · ')}</p>` : ''}
+          <p class="suggest"><a href="${suggestUrl(req)}" target="_blank"
+            rel="noopener noreferrer">Suggest a change to ${req.id} →</a></p>
         </div>
       </article>`;
   }
@@ -335,6 +343,78 @@
       const link = document.querySelector(`#toc a[data-section="${section.id}"]`);
       if (link) link.hidden = visible === 0;
     });
+  }
+
+  /* ── contribution links ───────────────────────────────────────── */
+
+  function formUrl(kind, params) {
+    const base = guide.meta.project.forms[kind];
+    if (!base) return guide.meta.project.issues;
+    const url = new URL(base);
+    Object.entries(params || {}).forEach(([k, v]) => url.searchParams.set(k, v));
+    return url.toString();
+  }
+
+  // Deep-links the issue form with the requirement already filled in, so a
+  // planner reporting a problem never has to work out which id they mean.
+  function suggestUrl(req) {
+    return formUrl('correction', {
+      title: `[${req.id}] `,
+      requirement: req.id,
+    });
+  }
+
+  /* ── jurisdiction overlays ────────────────────────────────────── */
+
+  function renderOverlayPicker() {
+    const select = $('#jurisdiction-select');
+    guide.jurisdictions.forEach((j) => {
+      const option = document.createElement('option');
+      option.value = j.id;
+      option.textContent = `${j.name}${j.status === 'reviewed' ? '' : ` (${j.status})`}`;
+      select.appendChild(option);
+    });
+
+    let stored = null;
+    try { stored = localStorage.getItem(OVERLAY_KEY); } catch (_) { /* blocked */ }
+    if (stored && guide.jurisdictions.some((j) => j.id === stored)) select.value = stored;
+
+    select.addEventListener('change', () => {
+      try { localStorage.setItem(OVERLAY_KEY, select.value); } catch (_) { /* blocked */ }
+      applyOverlay(select.value);
+    });
+    applyOverlay(select.value);
+  }
+
+  function applyOverlay(id) {
+    overlay = guide.jurisdictions.find((j) => j.id === id) || null;
+    const banner = $('#overlay-banner');
+
+    $$('[data-local]').forEach((slot) => {
+      const note = overlay && overlay.notes[slot.dataset.local];
+      slot.hidden = !note;
+      slot.innerHTML = note
+        ? `<strong>${esc(overlay.name)}</strong>${esc(note.note)}
+           ${note.citation ? `<span class="local-cite">${esc(note.citation)}</span>` : ''}`
+        : '';
+    });
+
+    if (!overlay) {
+      banner.hidden = true;
+      return;
+    }
+    banner.hidden = false;
+    banner.innerHTML = `
+      <div class="overlay-banner-head">
+        <strong>${esc(overlay.name)}</strong>
+        <span class="overlay-status" data-status="${overlay.status}">${esc(overlay.status)}</span>
+      </div>
+      <p>${esc(overlay.summary || '')}</p>
+      <p class="muted">Annotates ${Object.keys(overlay.notes).length} requirement(s) ·
+        maintained by ${overlay.maintainers.map((m) => esc(m.name)).join(', ')} ·
+        updated ${esc(overlay.updated || 'unknown')}</p>
+      ${overlay.status !== 'reviewed' ? `<p class="overlay-warn">This overlay has not been
+        reviewed. Treat its notes as a starting point and confirm each one with counsel.</p>` : ''}`;
   }
 
   /* ── search ───────────────────────────────────────────────────── */
@@ -505,6 +585,18 @@
         <p>${esc(e.statement)}</p>
         <p><strong>Use:</strong> ${esc(e.use)}</p>
         <div class="evidence-verify"><strong>Verify locally:</strong> ${esc(e.verify)}</div>
+        ${(e.sources && e.sources.length)
+          ? `<div class="evidence-sources"><strong>Sources</strong><ul>${e.sources.map((src) =>
+              `<li><a href="${esc(src.url)}" target="_blank" rel="noopener noreferrer">${
+                esc(src.title)}</a> — ${esc(src.publisher)}${src.date ? `, ${esc(src.date)}` : ''}</li>`
+            ).join('')}</ul></div>`
+          : `<div class="evidence-uncited">
+              <strong>No primary source recorded.</strong>
+              The source guide names no citations, so this claim has not been traced to a
+              public document.
+              <a href="${formUrl('source', { title: `[source] ${e.headline}`, evidence: e.id })}"
+                 target="_blank" rel="noopener noreferrer">Add one →</a>
+            </div>`}
         <div class="evidence-links">
           ${e.sections.map((sid) => {
             const s = guide.sections.find((x) => x.id === sid);
@@ -515,6 +607,125 @@
 
     $$('#evidence-grid [data-goto="guide"]').forEach((link) =>
       link.addEventListener('click', () => setView('guide')));
+  }
+
+  /* ── contribute view ──────────────────────────────────────────── */
+
+  const WAYS_IN = [
+    {
+      form: 'source',
+      title: 'Cite a claim',
+      who: 'anyone with a library card',
+      body: 'Eighteen claims carry no primary source. Trace one to a public document — '
+          + 'a state audit, a court opinion, a commission docket, a published survey — and '
+          + 'it stops being an assertion.',
+      cta: 'Add a source',
+    },
+    {
+      form: 'jurisdiction',
+      title: 'Add your jurisdiction',
+      who: 'agencies, counties, law school clinics, NGOs',
+      body: 'The requirements are shared; the statutes are not. An overlay attaches your '
+          + 'notice statute, drought stages, tariff docket, and security authority to the '
+          + 'requirements they govern, without changing the guide for anyone else.',
+      cta: 'Start an overlay',
+    },
+    {
+      form: 'requirement',
+      title: 'Propose a requirement',
+      who: 'planners, counsel, engineers, residents who lived it',
+      body: 'Something the guide misses, or a protection that failed in practice. Bring '
+          + 'the failure mode: what was promised, what was missing from the promise, and '
+          + 'what it cost.',
+      cta: 'Propose one',
+    },
+    {
+      form: 'correction',
+      title: 'Correct something',
+      who: 'anyone who spots it',
+      body: 'A figure that is wrong, a legal statement that does not hold in your state, '
+          + 'a requirement filed under the wrong instrument. Corrections outrank additions.',
+      cta: 'File a correction',
+    },
+  ];
+
+  const GROUND_RULES = [
+    ['Every claim gets a source or a way to check it',
+     'A number with no provenance is a liability at a hearing. If you cannot cite it, '
+     + 'write how a community would verify it locally instead.'],
+    ['Nothing here is legal advice, and nothing may read like it',
+     'The guide describes what to require and why. It does not tell a town what the law '
+     + 'is where they are — that is what jurisdiction overlays and local counsel are for.'],
+    ['Declare an interest',
+     'If you work for, advise, or are funded by a data center developer, operator, '
+     + 'utility, or an organisation campaigning on either side, say so in the pull '
+     + 'request. Disclosed interest is welcome. Undisclosed interest is what gets a '
+     + 'contribution reverted.'],
+    ['Requirements stay portable',
+     'Anything true only in one state belongs in an overlay, not in the shared '
+     + 'requirement. Ids are permanent, because other people cite them.'],
+  ];
+
+  function renderContribute() {
+    const cov = guide.citation_coverage;
+    const project = guide.meta.project;
+
+    $('#coverage-card').innerHTML = `
+      <div class="coverage-figure">
+        <strong>${cov.uncited}</strong>
+        <span>claims still need a primary source</span>
+      </div>
+      <div class="coverage-body">
+        <p>${esc(cov.note)}</p>
+        <p class="muted">${cov.cited} of ${cov.claims} cited (${cov.percent}%). Coverage is
+        published at <code>api/v1/coverage.json</code> so nobody has to take the guide's
+        word for how well sourced it is.</p>
+        <a class="btn btn-primary" href="${formUrl('source', { title: '[source] ' })}"
+           target="_blank" rel="noopener noreferrer">Cite a claim</a>
+      </div>`;
+
+    $('#contribute-grid').innerHTML = WAYS_IN.map((w) => `
+      <article class="contribute-card">
+        <h3>${esc(w.title)}</h3>
+        <p class="contribute-who">${esc(w.who)}</p>
+        <p>${esc(w.body)}</p>
+        <a class="btn" href="${formUrl(w.form, {})}" target="_blank"
+           rel="noopener noreferrer">${esc(w.cta)} →</a>
+      </article>`).join('');
+
+    $('#overlay-count').textContent = guide.jurisdictions.length;
+    $('#overlay-how').textContent =
+      'An overlay is one JSON file keyed by requirement id. It adds local statutes, '
+      + 'dockets, and citations to the shared requirements — it never changes or removes '
+      + 'one, so the guide stays comparable across places.';
+    $('#overlay-grid').innerHTML = guide.jurisdictions.map((j) => `
+      <article class="overlay-card">
+        <div class="overlay-card-head">
+          <h3>${esc(j.name)}</h3>
+          <span class="overlay-status" data-status="${j.status}">${esc(j.status)}</span>
+        </div>
+        <p>${esc(j.summary || '')}</p>
+        <p class="muted">${esc(j.level)} · annotates ${Object.keys(j.notes).length}
+          requirement(s) · updated ${esc(j.updated || 'unknown')}</p>
+      </article>`).join('') + `
+      <article class="overlay-card overlay-card-cta">
+        <h3>Your jurisdiction</h3>
+        <p>Copy <code>data/jurisdictions/template.json</code>, replace the notes with what
+        actually governs where you are, and open a pull request.</p>
+        <a class="btn" href="${formUrl('jurisdiction', {})}" target="_blank"
+           rel="noopener noreferrer">Start one →</a>
+      </article>`;
+
+    $('#rules-grid').innerHTML = GROUND_RULES.map(([title, body]) => `
+      <div class="rule-card"><h3>${esc(title)}</h3><p>${esc(body)}</p></div>`).join('');
+
+    $('#licence-note').innerHTML = `
+      <p><strong>Licence.</strong> Content is ${esc(guide.meta.license.content)}; code is
+      ${esc(guide.meta.license.code)}. Contributions are accepted under the same terms.
+      Attribute as: <code>${esc(guide.meta.license.attribution)}</code></p>
+      <p><a href="${project.contributing}" target="_blank" rel="noopener noreferrer">Contributing guide</a>
+       · <a href="${project.governance}" target="_blank" rel="noopener noreferrer">Governance</a>
+       · <a href="${project.repository}" target="_blank" rel="noopener noreferrer">Source</a></p>`;
   }
 
   /* ── API view ─────────────────────────────────────────────────── */
@@ -535,6 +746,9 @@
     ['scoring.json', 'How the readiness score is computed'],
     ['tags.json', 'Tag facets with counts'],
     ['search.json', 'Client-side search index'],
+    ['jurisdictions.json', 'Local overlays and how to add one'],
+    ['jurisdictions/template.json', 'One overlay, keyed by requirement id'],
+    ['coverage.json', 'How many claims are traced to a source'],
     ['guide.json', 'The entire guide in one document'],
     ['openapi.json', 'OpenAPI 3.1 description'],
   ];

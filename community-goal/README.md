@@ -44,10 +44,13 @@ rather than atmospheric.
 | `data/guide.json` | Goal, framing facts, basic rule, the six instruments, the six pre-vote questions |
 | `data/sections.json` | Ten sections, 71 requirements |
 | `data/evidence.json` | 18 factual claims, what each is good for, and how to check it locally |
+| `data/jurisdictions/` | Community-contributed local overlays — one JSON file per place |
 | `schema/guide.schema.json` | Shape of the data files |
 | `build.py` | Validates the data and generates `dist/` — the API and the site |
 | `serve.py` | Builds and serves locally over HTTP |
 | `site/` | The interactive site (no framework, no build step, no third-party requests) |
+| `CONTRIBUTING.md` | How to cite a claim, add a jurisdiction, propose a requirement |
+| `GOVERNANCE.md` | Who decides, how disputed claims are handled, the disclosure rule |
 
 ## API
 
@@ -71,6 +74,9 @@ api/v1/checklist.json                 blank assessment template + scoring model
 api/v1/scoring.json                   how the readiness score is computed
 api/v1/tags.json                      tag facets with counts
 api/v1/search.json                    client-side search index
+api/v1/jurisdictions.json             local overlays and how to add one
+api/v1/jurisdictions/{id}.json        one overlay, keyed by requirement id
+api/v1/coverage.json                  how many claims are traced to a source
 api/v1/guide.json                     the entire guide in one document
 api/v1/guide.md                       the entire guide as Markdown
 api/v1/openapi.json                   OpenAPI 3.1 description of all of the above
@@ -106,6 +112,11 @@ Four views, all client-side, all rendered from the same API:
 - **Evidence** — every claim the guide relies on, what it is useful for, and how
   to check it in your own jurisdiction before repeating it at a hearing.
 - **API** — a live explorer over the endpoints above.
+- **Contribute** — citation coverage, the four ways in, and the ground rules.
+
+A **local overlay** picker in the sidebar attaches your jurisdiction's statutes,
+drought stages, and dockets to the requirements they govern, inline, without
+changing the shared guide for anyone else.
 
 Assessment state lives in `localStorage` only. Nothing is uploaded, because a
 half-finished evaluation of a live proposal is not something a town should have
@@ -126,23 +137,55 @@ dangling evidence id, a requirement filed under the wrong section, or an unknown
 instrument — a broken reference should fail the build, not become a dead link on
 a public page.
 
-## Editing the content
+Change `data/*.json` and rebuild; nothing in `site/` hardcodes the content, so
+editing the guide never means editing the page. The build fails with the file
+and field to fix, so you do not need to read the Python to correct your JSON.
 
-Change `data/*.json` and rebuild; nothing in `site/` hardcodes the content.
-Adding a requirement means adding an object to a section's `requirements` array
-with a unique `s{n}-r{n}` id, a `type`, a `weight`, and the `instruments` that
-can carry it. The tests will tell you what you missed.
+## Contributing
+
+**This is an open project and the most useful contributions need no code.** It is
+open to residents, town and county staff, planning boards, state agencies,
+utility consumer advocates, NGOs, law school clinics, engineers, and land use
+counsel — including people who work for developers and operators, under the
+disclosure rule in [GOVERNANCE.md](GOVERNANCE.md).
+
+Four ways in, roughly by leverage:
+
+1. **Cite a claim.** 18 of 18 claims carry no primary source. Coverage is
+   published at `api/v1/coverage.json` rather than hidden, so the gap is visible
+   and closable. Tracing one claim to a public document is a ten-minute
+   contribution that makes the guide materially more usable at a hearing.
+2. **Add a jurisdiction overlay.** The requirements are portable; statutes are
+   not. Copy `data/jurisdictions/template.json`, replace the notes with your
+   notice statute, drought stages, tariff docket, and security authority, and
+   open a pull request. Overlays add local context — they never change or remove
+   a shared requirement, so the guide stays comparable across places.
+3. **Correct something.** Corrections outrank additions, including the
+   maintainers' own. "I am the zoning administrator and this is not how it works
+   here" is evidence.
+4. **Propose a requirement**, ideally with the failure mode attached.
+
+Issue forms cover all four if you would rather not touch JSON — see the
+[templates](https://github.com/caffeinated1/configurationRotBot/issues/new/choose).
+Full detail in [CONTRIBUTING.md](CONTRIBUTING.md); decision-making, the
+conflict-of-interest rule, and how contested claims are handled in
+[GOVERNANCE.md](GOVERNANCE.md).
+
+Requirement ids are permanent, because people cite them in staff reports. `s9-r2`
+will mean the same thing next year.
 
 ## Provenance and limits
 
 The content is a structured rendering of the source guide. Figures and case
 references are reproduced as stated there; the source does not name its
 citations, which is why every evidence item ships with a `verify` field instead
-of a footnote. Treat each one as a claim to confirm locally before relying on it
-in a hearing.
+of a footnote, and why sourcing them is the top contribution ask. Treat each one
+as a claim to confirm locally before relying on it in a hearing.
 
 **This is not legal advice.** Authority for zoning conditions, exactions,
 payments, and utility commitments varies by state. Confirm every item with
 counsel licensed in your jurisdiction.
 
-Content: CC BY 4.0. Code: MIT, with the rest of this repository.
+Content: **CC BY 4.0**. Code: **MIT**, with the rest of this repository.
+Contributions are accepted under the same terms; there is no CLA. Cite as
+described in [CITATION.cff](../CITATION.cff).

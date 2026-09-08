@@ -33,15 +33,27 @@ class BuildError(Exception):
     """Raised when the source data is internally inconsistent."""
 
 
-def load() -> tuple[dict, list, list]:
+def load() -> tuple[dict, list, list, list]:
     guide = json.loads((DATA / "guide.json").read_text(encoding="utf-8"))
     sections = json.loads((DATA / "sections.json").read_text(encoding="utf-8"))
     evidence = json.loads((DATA / "evidence.json").read_text(encoding="utf-8"))
-    return guide, sections, evidence
+    jurisdictions = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((DATA / "jurisdictions").glob("*.json"))
+    ]
+    return guide, sections, evidence, jurisdictions
 
 
-def validate(guide: dict, sections: list, evidence: list) -> None:
-    """Fail the build on a broken reference rather than shipping a dead link."""
+ALLOWED_LEVELS = ("national", "state", "province", "county", "municipality", "template")
+ALLOWED_STATUS = ("template", "draft", "reviewed")
+
+
+def validate(guide: dict, sections: list, evidence: list, jurisdictions: list) -> None:
+    """Fail the build on a broken reference rather than shipping a dead link.
+
+    Contributions arrive as JSON from people who are not necessarily
+    programmers, so the messages here name the file and the field to fix.
+    """
     errors: list[str] = []
 
     evidence_ids = {e["id"] for e in evidence}
@@ -80,6 +92,37 @@ def validate(guide: dict, sections: list, evidence: list) -> None:
         for sid in ev.get("sections", []):
             if sid not in section_ids:
                 errors.append(f"{ev['id']} references unknown section {sid!r}")
+        # A citation with no publisher or a bare link is not a citation anyone
+        # can check, which is the whole point of adding one.
+        for i, src in enumerate(ev.get("sources", [])):
+            where = f"{ev['id']} sources[{i}]"
+            for field in ("title", "publisher", "url"):
+                if not str(src.get(field, "")).strip():
+                    errors.append(f"{where} is missing {field}")
+            url = str(src.get("url", ""))
+            if url and not url.startswith("https://"):
+                errors.append(f"{where} url must be https: {url!r}")
+
+    seen_jurisdiction: set = set()
+    for jur in jurisdictions:
+        jid = jur.get("id", "?")
+        if jid in seen_jurisdiction:
+            errors.append(f"duplicate jurisdiction id: {jid}")
+        seen_jurisdiction.add(jid)
+        if jur.get("level") not in ALLOWED_LEVELS:
+            errors.append(f"jurisdiction {jid} has level {jur.get('level')!r}; "
+                          f"expected one of {', '.join(ALLOWED_LEVELS)}")
+        if jur.get("status") not in ALLOWED_STATUS:
+            errors.append(f"jurisdiction {jid} has status {jur.get('status')!r}; "
+                          f"expected one of {', '.join(ALLOWED_STATUS)}")
+        if not jur.get("maintainers"):
+            errors.append(f"jurisdiction {jid} names no maintainer; an overlay "
+                          "nobody maintains goes stale silently")
+        for rid, note in (jur.get("notes") or {}).items():
+            if rid not in seen_req:
+                errors.append(f"jurisdiction {jid} annotates unknown requirement {rid!r}")
+            if not str(note.get("note", "")).strip():
+                errors.append(f"jurisdiction {jid} note {rid} is empty")
 
     for fact in guide["framing"]["facts"]:
         if fact["evidence"] not in evidence_ids:
@@ -265,6 +308,18 @@ def openapi_spec(base_url: str, guide: dict, sections: list, requirements: list)
                                       "operationId": "getScoring", "responses": ok("Scoring model")}},
             "/search.json": {"get": {"summary": "Client-side search index over the whole guide",
                                      "operationId": "getSearchIndex", "responses": ok("Search index")}},
+            "/jurisdictions.json": {"get": {
+                "summary": "Community-contributed local overlays and how to add one",
+                "operationId": "listJurisdictions", "responses": ok("Jurisdictions")}},
+            "/jurisdictions/{jurisdictionId}.json": {"get": {
+                "summary": "One overlay: local notes and citations keyed by requirement id",
+                "operationId": "getJurisdiction",
+                "parameters": [{"name": "jurisdictionId", "in": "path", "required": True,
+                                "schema": {"type": "string"}}],
+                "responses": ok("Jurisdiction overlay")}},
+            "/coverage.json": {"get": {
+                "summary": "How many claims have been traced to a primary source",
+                "operationId": "getCoverage", "responses": ok("Citation coverage")}},
             "/guide.json": {"get": {"summary": "The entire guide as one document",
                                     "operationId": "getGuide", "responses": ok("Full guide")}},
         },
@@ -300,6 +355,18 @@ def render_markdown(guide: dict, sections: list, evidence: list) -> str:
     for ev in evidence:
         out += [f"### {ev['headline']}", "", ev["statement"], "",
                 f"**Verify locally:** {ev['verify']}", ""]
+        if ev.get("sources"):
+            out += ["**Sources:**", ""]
+            out += [f"- {s['title']} — {s['publisher']}. <{s['url']}>"
+                    for s in ev["sources"]]
+            out += [""]
+        else:
+            out += ["_No primary source recorded yet. If you can trace this claim to a "
+                    "public document, that is the single most useful contribution you can "
+                    f"make: {guide['meta']['project']['forms']['source']}_", ""]
+    out += ["## Contributing", "",
+            "This guide is open to anyone — residents, town staff, NGOs, agencies, and "
+            "practitioners. See " + guide["meta"]["project"]["contributing"] + ".", ""]
     return "\n".join(out)
 
 
@@ -308,9 +375,29 @@ def write_json(path: Path, payload) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def citation_coverage(evidence: list) -> dict:
+    """How much of the guide is actually sourced.
+
+    Published rather than hidden: the source document names no citations, so
+    every uncited claim is an open contribution, and a community deciding how
+    far to trust this needs the number in front of it.
+    """
+    cited = [e for e in evidence if e.get("sources")]
+    return {
+        "claims": len(evidence),
+        "cited": len(cited),
+        "uncited": len(evidence) - len(cited),
+        "percent": round(len(cited) / len(evidence) * 100) if evidence else 0,
+        "uncited_ids": [e["id"] for e in evidence if not e.get("sources")],
+        "note": ("Every claim ships with a note on how to check it locally. A claim with "
+                 "sources has been traced to a primary document; one without has not, and "
+                 "is a contribution waiting to happen."),
+    }
+
+
 def build(dist: Path, base_url: str) -> dict:
-    guide, sections, evidence = load()
-    validate(guide, sections, evidence)
+    guide, sections, evidence, jurisdictions = load()
+    validate(guide, sections, evidence, jurisdictions)
 
     requirements = flatten_requirements(sections)
     scoring = scoring_model(guide, requirements)
@@ -326,15 +413,19 @@ def build(dist: Path, base_url: str) -> dict:
         for tag in req["tags"]:
             tags[tag] = tags.get(tag, 0) + 1
 
+    coverage = citation_coverage(evidence)
+
     meta = dict(guide["meta"])
     meta["built_at"] = built_at
     meta["api_version"] = API_VERSION
+    meta["citation_coverage"] = {k: v for k, v in coverage.items() if k != "uncited_ids"}
 
     endpoints = [
         "index.json", "goal.json", "rule.json", "framing.json", "instruments.json",
         "sections.json", "sections/{id}.json", "requirements.json",
         "requirements/{id}.json", "evidence.json", "evidence/{id}.json", "tags.json",
         "questions.json", "checklist.json", "scoring.json", "search.json",
+        "jurisdictions.json", "jurisdictions/{id}.json", "coverage.json",
         "guide.json", "guide.md", "openapi.json",
     ]
 
@@ -348,7 +439,9 @@ def build(dist: Path, base_url: str) -> dict:
             "actions": sum(1 for r in requirements if r["type"] == "action"),
             "evidence": len(evidence),
             "instruments": len(guide["instruments"]),
+            "jurisdictions": len(jurisdictions),
         },
+        "contribute": guide["meta"]["project"],
         "endpoints": [f"{base_url}/api/{API_VERSION}/{e}" for e in endpoints],
         "openapi": f"{base_url}/api/{API_VERSION}/openapi.json",
         "site": base_url + "/",
@@ -367,6 +460,29 @@ def build(dist: Path, base_url: str) -> dict:
     write_json(api / "tags.json", {"meta": meta,
                                    "tags": [{"tag": t, "count": c} for t, c in sorted(tags.items())]})
     write_json(api / "scoring.json", {"meta": meta, "scoring": scoring})
+    write_json(api / "coverage.json", {"meta": meta, "citation_coverage": coverage})
+    write_json(api / "jurisdictions.json", {
+        "meta": meta,
+        "count": len(jurisdictions),
+        "how_to_add": (
+            "Copy data/jurisdictions/template.json, replace every note with the "
+            "statute, tariff, or ordinance that governs where you are, and open a "
+            "pull request. An overlay adds local context to a shared requirement; "
+            "it never changes or removes one."
+        ),
+        "jurisdictions": [{
+            "id": j["id"],
+            "name": j["name"],
+            "level": j["level"],
+            "status": j["status"],
+            "updated": j.get("updated"),
+            "summary": j.get("summary", ""),
+            "maintainers": j.get("maintainers", []),
+            "annotates": sorted((j.get("notes") or {}).keys()),
+        } for j in jurisdictions],
+    })
+    for jur in jurisdictions:
+        write_json(api / "jurisdictions" / f"{jur['id']}.json", {"meta": meta, "jurisdiction": jur})
     write_json(api / "search.json",
                {"meta": meta, "documents": build_search_index(guide, sections, evidence, requirements)})
 
@@ -418,6 +534,8 @@ def build(dist: Path, base_url: str) -> dict:
         "evidence": evidence,
         "final_questions": guide["final_questions"],
         "scoring": scoring,
+        "jurisdictions": jurisdictions,
+        "citation_coverage": coverage,
     })
     write_json(api / "openapi.json", openapi_spec(base_url, guide, sections, requirements))
     (api / "guide.md").write_text(render_markdown(guide, sections, evidence), encoding="utf-8")
@@ -431,7 +549,8 @@ def build(dist: Path, base_url: str) -> dict:
 
     assert by_id  # referenced for clarity that ids are unique post-validation
     return {"requirements": len(requirements), "sections": len(sections),
-            "evidence": len(evidence), "max_points": scoring["max_points"]}
+            "evidence": len(evidence), "max_points": scoring["max_points"],
+            "jurisdictions": len(jurisdictions), "cited": coverage["cited"]}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -445,10 +564,13 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.check:
-            guide, sections, evidence = load()
-            validate(guide, sections, evidence)
-            print("data ok: %d sections, %d requirements, %d evidence items" % (
-                len(sections), sum(len(s["requirements"]) for s in sections), len(evidence)))
+            guide, sections, evidence, jurisdictions = load()
+            validate(guide, sections, evidence, jurisdictions)
+            coverage = citation_coverage(evidence)
+            print("data ok: %d sections, %d requirements, %d evidence items "
+                  "(%d cited), %d jurisdiction overlays" % (
+                      len(sections), sum(len(s["requirements"]) for s in sections),
+                      len(evidence), coverage["cited"], len(jurisdictions)))
             return 0
         stats = build(Path(args.dist), args.base_url.rstrip("/"))
     except BuildError as exc:
@@ -456,7 +578,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     print("built {sections} sections, {requirements} requirements, {evidence} evidence items "
-          "(max score {max_points} points) -> {dist}".format(dist=args.dist, **stats))
+          "({cited} cited), {jurisdictions} jurisdiction overlays, max score {max_points} "
+          "points -> {dist}".format(dist=args.dist, **stats))
     return 0
 
 

@@ -1,0 +1,67 @@
+name: "Community Goal — cite a claim"
+description: Trace a factual claim in the guide to a primary source.
+title: "[source] "
+labels: ["community-goal", "evidence"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The source document names no citations, so every claim in the guide is
+        published with a way to verify it rather than a footnote. Closing one of
+        those gaps is the single most useful contribution you can make.
+
+        You do not need to edit any files — filling this in is enough.
+  - type: input
+    id: evidence
+    attributes:
+      label: Which claim
+      description: The evidence id (for example `ev-incentive-returns`), or paste the headline.
+      placeholder: ev-…
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Source title
+      description: The exact title of the document.
+    validations:
+      required: true
+  - type: input
+    id: publisher
+    attributes:
+      label: Publisher
+      description: The body that published it — a legislative auditor, a court, a commission, a university.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link
+      description: Must be a public https link that resolves.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: As specific as the document allows — 2024, 2024-06, 2024-06-14.
+  - type: input
+    id: locator
+    attributes:
+      label: Where in it
+      description: Table, page, section, or paragraph. Saves the next reader an hour.
+  - type: textarea
+    id: mismatch
+    attributes:
+      label: Does the source actually support the claim as written?
+      description: >
+        If the source says something narrower, broader, or different, say so. A
+        correction that fixes a figure is worth more than a citation that props
+        up a wrong one.
+  - type: input
+    id: interest
+    attributes:
+      label: Material interest, if any
+      description: >
+        Per GOVERNANCE.md. Disclosed interest disqualifies nobody. Leave blank if none.
