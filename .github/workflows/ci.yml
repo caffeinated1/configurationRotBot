@@ -19,7 +19,7 @@ jobs:
         # below 3.11, and that path needs exercising on every change.
         python-version: ["3.9", "3.11", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -44,7 +44,7 @@ jobs:
     name: Scan this repository
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configuration rot scan
         uses: ./
         with:
@@ -54,7 +54,7 @@ jobs:
     name: Installer works end to end
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install from this commit into a scratch project
         run: |
@@ -86,7 +86,7 @@ jobs:
     name: Fixture still exercises every detector
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
