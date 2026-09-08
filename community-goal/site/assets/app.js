@@ -733,8 +733,12 @@
   }
 
   function wireChrome() {
-    $$('.view-tab').forEach((tab) =>
-      tab.addEventListener('click', () => setView(tab.dataset.view)));
+    $$('.view-tab').forEach((tab) => tab.addEventListener('click', () => {
+      setView(tab.dataset.view);
+      // Views share one scroll container, so a tab switch has to reset it —
+      // otherwise Readiness opens halfway down its own gap list.
+      window.scrollTo(0, 0);
+    }));
 
     $('#theme-btn').addEventListener('click', () => {
       const root = document.documentElement;
