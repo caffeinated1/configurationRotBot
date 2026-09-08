@@ -316,8 +316,19 @@ class SiteTests(unittest.TestCase):
             self.assertTrue(os.path.isfile(path),
                             "%s form points at missing %s" % (kind, name))
 
+    def test_roadmap_lists_every_claim_that_still_needs_a_source(self) -> None:
+        # The roadmap is the "what can I pick up" page. A claim that is uncited
+        # but missing from it is work nobody can find.
+        with open(os.path.join(GOAL, "ROADMAP.md"), encoding="utf-8") as handle:
+            roadmap = handle.read()
+        evidence = read(os.path.join(GOAL, "data", "evidence.json"))
+        for item in evidence:
+            if not item.get("sources"):
+                self.assertIn(item["id"], roadmap,
+                              "%s has no source and no roadmap entry" % item["id"])
+
     def test_contribution_docs_exist_where_the_site_says_they_do(self) -> None:
-        for name in ("CONTRIBUTING.md", "GOVERNANCE.md", "README.md"):
+        for name in ("CONTRIBUTING.md", "GOVERNANCE.md", "README.md", "ROADMAP.md"):
             self.assertTrue(os.path.isfile(os.path.join(GOAL, name)), name)
         self.assertTrue(os.path.isfile(os.path.join(ROOT, "CODE_OF_CONDUCT.md")))
         self.assertTrue(os.path.isfile(os.path.join(ROOT, "CITATION.cff")))

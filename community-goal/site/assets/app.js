@@ -680,6 +680,9 @@
         <p class="muted">${cov.cited} of ${cov.claims} cited (${cov.percent}%). Coverage is
         published at <code>api/v1/coverage.json</code> so nobody has to take the guide's
         word for how well sourced it is.</p>
+        <p><a href="${esc(project.roadmap)}" target="_blank" rel="noopener noreferrer">
+          All ${cov.uncited} are listed in the roadmap</a>, each with a note on where its
+          primary document probably lives. One claim is a complete contribution.</p>
         <a class="btn btn-primary" href="${formUrl('source', { title: '[source] ' })}"
            target="_blank" rel="noopener noreferrer">Cite a claim</a>
       </div>`;
@@ -724,6 +727,7 @@
       ${esc(guide.meta.license.code)}. Contributions are accepted under the same terms.
       Attribute as: <code>${esc(guide.meta.license.attribution)}</code></p>
       <p><a href="${project.contributing}" target="_blank" rel="noopener noreferrer">Contributing guide</a>
+       · <a href="${project.roadmap}" target="_blank" rel="noopener noreferrer">Roadmap</a>
        · <a href="${project.governance}" target="_blank" rel="noopener noreferrer">Governance</a>
        · <a href="${project.repository}" target="_blank" rel="noopener noreferrer">Source</a></p>`;
   }

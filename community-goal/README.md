@@ -51,6 +51,7 @@ rather than atmospheric.
 | `site/` | The interactive site (no framework, no build step, no third-party requests) |
 | `CONTRIBUTING.md` | How to cite a claim, add a jurisdiction, propose a requirement |
 | `GOVERNANCE.md` | Who decides, how disputed claims are handled, the disclosure rule |
+| `ROADMAP.md` | Specific claimable work, starting with the 18 uncited claims |
 
 ## API
 
@@ -164,6 +165,10 @@ Four ways in, roughly by leverage:
    maintainers' own. "I am the zoning administrator and this is not how it works
    here" is evidence.
 4. **Propose a requirement**, ideally with the failure mode attached.
+
+**[ROADMAP.md](ROADMAP.md) is the claimable-work list**: all 18 uncited claims
+with a note on where each primary document probably lives, the jurisdictions
+worth overlaying first, and the content gaps we already know about.
 
 Issue forms cover all four if you would rather not touch JSON — see the
 [templates](https://github.com/caffeinated1/configurationRotBot/issues/new/choose).

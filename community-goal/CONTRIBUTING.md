@@ -20,8 +20,10 @@ counsel.
 | 5 | **Report from experience.** What you required, what happened, what you would write differently | Anyone who has been through it | Varies |
 | 6 | **Translate.** The data is separate from the presentation, so a translation is a data file, not a fork | Bilingual contributors | Varies |
 
-Not sure which? Open an issue and describe what you have. Someone will help you
-file it in the right place.
+Not sure which? **[ROADMAP.md](ROADMAP.md) lists specific claimable work** — every
+uncited claim with a note on where its primary document probably lives, the
+jurisdictions worth overlaying first, and the gaps we already know about. Or open
+an issue describing what you have and someone will help you file it.
 
 ## Setup
 
