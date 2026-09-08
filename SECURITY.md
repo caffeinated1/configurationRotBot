@@ -10,21 +10,16 @@ Expect an acknowledgement within a week.
 
 ## What is in scope
 
-**configurationRotBot** — the scanner runs against repositories that may contain
-untrusted content, so anything that makes it write outside its own state
-directory, execute code from a scanned repository, or exfiltrate data over the
-network is in scope. Its invariants (read-only against the repo under scan,
-offline by default, no third-party imports) are the security boundary.
-
-**Community Goal** — the published site is static and stores assessment data
-only in the reader's own browser. In scope: anything that causes contributed
-content to execute as script in a reader's browser, or that would send a
-reader's assessment anywhere.
+The scanner runs against repositories that may contain untrusted content, so
+anything that makes it write outside its own state directory, execute code from
+a scanned repository, or exfiltrate data over the network is in scope. Its
+invariants — read-only against the repo under scan, offline by default, no
+third-party imports — are the security boundary.
 
 ## What is not
 
 - Findings that require a user to run the tool against a repository while
   deliberately misconfiguring it.
-- Content disputes in the guide — those are corrections, not vulnerabilities.
-  See [community-goal/CONTRIBUTING.md](community-goal/CONTRIBUTING.md).
+- False positives and missed findings — those are bugs, and
+  [CONTRIBUTING.md](CONTRIBUTING.md) is the place for them.
 - Denial of service against GitHub Pages, which is not ours to fix.

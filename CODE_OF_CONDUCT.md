@@ -17,13 +17,9 @@ for everyone: contributors, maintainers, and drive-by commenters alike.
   statute" is not.
 - **Bring evidence.** A disagreement about facts is settled by sources, or it is
   documented as unsettled.
-- **Disclose material interests** as described in
-  [community-goal/GOVERNANCE.md](community-goal/GOVERNANCE.md). People who work
-  for developers, operators, utilities, and campaigning organisations are all
-  welcome here on the same terms.
-- **Accept that people disagree about outcomes.** This project is used by
-  communities that approve projects and by communities that refuse them. Both
-  are legitimate users.
+- **Say where you are coming from.** If you maintain, work for, or are paid by
+  a project this change would affect, say so. Disclosed interest disqualifies
+  nobody; concealed interest is what erodes trust in a shared dataset.
 
 ## Unacceptable behaviour
 
@@ -31,8 +27,6 @@ for everyone: contributors, maintainers, and drive-by commenters alike.
 - Sexualised language or imagery, and unwelcome attention of any kind.
 - Publishing private information — anyone's, including that of people involved
   in a proposal under discussion.
-- Content targeting identifiable private individuals, including landowners and
-  local officials, rather than institutions and their conduct.
 - Concealing a material interest while advocating for a change.
 
 ## Reporting
@@ -49,5 +43,4 @@ this document, and may block persistent or serious violators. Where the problem
 is undisclosed interest, the contribution is reverted regardless of its merit —
 the record has to be trustworthy.
 
-Adapted in spirit from the Contributor Covenant, rewritten for a project whose
-subject matter is contested by design.
+Adapted in spirit from the Contributor Covenant.
