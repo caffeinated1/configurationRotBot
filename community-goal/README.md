@@ -49,6 +49,8 @@ rather than atmospheric.
 | `build.py` | Validates the data and generates `dist/` — the API and the site |
 | `serve.py` | Builds and serves locally over HTTP |
 | `site/` | The interactive site (no framework, no build step, no third-party requests) |
+| `extract.py` | Moves the guide to its own repository, rewriting paths and URLs |
+| `standalone/` | The few files that only make sense once it is standalone |
 | `CONTRIBUTING.md` | How to cite a claim, add a jurisdiction, propose a requirement |
 | `GOVERNANCE.md` | Who decides, how disputed claims are handled, the disclosure rule |
 | `ROADMAP.md` | Specific claimable work, starting with the 18 uncited claims |
@@ -178,6 +180,24 @@ conflict-of-interest rule, and how contested claims are handled in
 
 Requirement ids are permanent, because people cite them in staff reports. `s9-r2`
 will mean the same thing next year.
+
+## Moving to its own repository
+
+A civic guide inside a developer tooling repository is hard for a town planner or
+an NGO to find or trust, so everything here is self-contained and the move is one
+command:
+
+```bash
+python3 community-goal/extract.py --dest ../community-goal --git
+```
+
+That copies the content to a new repository root, rewrites every path and URL
+that assumed a subdirectory, drops in a standalone CI workflow and the licence
+pair, then builds and tests the result before it will let you push it. Pass
+`--repo owner/name` to target a different name; the URLs follow.
+
+The extraction is covered by the test suite, so renaming a document here cannot
+silently break it.
 
 ## Provenance and limits
 

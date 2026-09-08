@@ -281,6 +281,75 @@ class BuildTests(unittest.TestCase):
         self.assertFalse(os.path.exists(stray))
 
 
+class ExtractionTests(unittest.TestCase):
+    """The guide is meant to move to its own repository; keep that move working.
+
+    extract.py rewrites paths and URLs that assume a subdirectory. Renaming a
+    document here, or moving one, silently breaks it — so the extraction runs
+    for real and the result has to build and test on its own.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        sys.path.insert(0, GOAL)
+        import extract  # noqa: E402
+
+        cls.extract = extract
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls.dest = pathlib.Path(cls._tmp.name) / "standalone"
+        extract.extract(cls.dest, "exampleorg/example-guide", force=True)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._tmp.cleanup()
+
+    def test_the_extracted_tree_stands_on_its_own(self) -> None:
+        # Builds, tests, and carries no reference to the repository it left.
+        self.extract.verify(self.dest)
+
+    def test_content_and_docs_arrive_at_the_root(self) -> None:
+        for name in ("build.py", "serve.py", "README.md", "CONTRIBUTING.md",
+                     "GOVERNANCE.md", "ROADMAP.md", "CODE_OF_CONDUCT.md",
+                     "SECURITY.md", "CITATION.cff", "LICENSE", "LICENSE-CONTENT.md",
+                     ".gitignore", "data/guide.json", "data/sections.json",
+                     "data/evidence.json", "schema/guide.schema.json",
+                     "site/index.html", "tests/test_guide.py",
+                     ".github/workflows/ci.yml", ".github/workflows/pages.yml",
+                     ".github/PULL_REQUEST_TEMPLATE.md"):
+            self.assertTrue((self.dest / name).exists(), name)
+
+    def test_issue_forms_lose_their_prefix_and_stay_linked(self) -> None:
+        guide = json.loads((self.dest / "data" / "guide.json").read_text(encoding="utf-8"))
+        for kind, url in guide["meta"]["project"]["forms"].items():
+            name = url.rsplit("template=", 1)[-1]
+            self.assertFalse(name.startswith("cg-"), name)
+            self.assertTrue((self.dest / ".github" / "ISSUE_TEMPLATE" / name).exists(),
+                            "%s form points at missing %s" % (kind, name))
+
+    def test_urls_point_at_the_new_repository(self) -> None:
+        guide = json.loads((self.dest / "data" / "guide.json").read_text(encoding="utf-8"))
+        project = guide["meta"]["project"]
+        self.assertEqual(project["repository"], "https://github.com/exampleorg/example-guide")
+        self.assertNotIn("directory", project)
+        for url in list(project["forms"].values()) + [project["contributing"],
+                                                      project["governance"], project["roadmap"]]:
+            self.assertIn("exampleorg/example-guide", url)
+            self.assertNotIn("/community-goal/", url)
+
+    def test_workflows_build_from_the_root(self) -> None:
+        pages = (self.dest / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+        self.assertIn("python3 build.py --dist dist", pages)
+        self.assertIn("path: dist", pages)
+        self.assertNotIn("community-goal/", pages)
+        # Pull requests must still build without deploying.
+        self.assertIn("pull_request:", pages)
+        self.assertIn("if: github.event_name != 'pull_request'", pages)
+
+    def test_it_refuses_to_clobber_an_existing_directory(self) -> None:
+        with self.assertRaises(SystemExit):
+            self.extract.extract(self.dest, "exampleorg/example-guide", force=False)
+
+
 class SiteTests(unittest.TestCase):
     """The source site, checked for the mistakes that only show up in a browser."""
 
