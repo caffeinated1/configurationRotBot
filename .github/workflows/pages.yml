@@ -53,7 +53,7 @@ jobs:
         # repository setting: PR builds prove the data is sound and deploy
         # nothing, so the fallback URL below is good enough for them.
         continue-on-error: true
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           enablement: true
 
