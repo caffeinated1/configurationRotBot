@@ -1,0 +1,75 @@
+name: CI
+
+# The data files are the contribution surface and most contributors are not
+# programmers, so the checks run on every push and pull request and say which
+# file and field to fix.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the floor. Nothing here needs anything newer, and a civic tool
+        # should build on whatever Python a government laptop already has.
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate the data
+        run: python3 build.py --check
+
+      - name: Guide, API, and site tests
+        run: python3 tests/test_guide.py
+
+      - name: Build
+        run: python3 build.py --dist /tmp/dist
+
+  no-dependencies:
+    name: The build still needs nothing but the standard library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assert no third-party imports
+        run: |
+          set -euo pipefail
+          # A civic tool that needs `pip install` to rebuild is one that stops
+          # being rebuilt. Fail loudly if an import sneaks in.
+          python3 - <<'PY'
+          import ast, pathlib, sys
+          stdlib = set(sys.stdlib_module_names)
+          bad = []
+          for path in [pathlib.Path("build.py"), pathlib.Path("serve.py"),
+                       *pathlib.Path("tests").glob("*.py")]:
+              tree = ast.parse(path.read_text())
+              for node in ast.walk(tree):
+                  if isinstance(node, ast.Import):
+                      names = [a.name.split(".")[0] for a in node.names]
+                  elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                      names = [(node.module or "").split(".")[0]]
+                  else:
+                      continue
+                  for name in names:
+                      if name and name not in stdlib and name not in {"build"}:
+                          bad.append(f"{path}: {name}")
+          if bad:
+              print("third-party imports found:")
+              print("\n".join("  " + b for b in bad))
+              raise SystemExit(1)
+          print("stdlib only, as intended")
+          PY

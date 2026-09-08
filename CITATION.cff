@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+title: "Community Goal — a town's first data center: what to require before saying yes"
+message: >-
+  If you use this guide, its requirements, or its API in a staff report, filing,
+  or publication, please cite it. Requirement ids are permanent, so citing one
+  (for example s9-r2) will mean the same thing next year.
+type: dataset
+abstract: >-
+  A structured, open requirements guide for local governments facing a first data
+  center proposal: ten sections and seventy-one requirements covering independent
+  review, site suitability, instrument selection, water, noise, on-site
+  generation, ratepayer and budget exposure, public return, financial security,
+  and phased approval with funded closure. Published as an interactive site and a
+  static JSON API, with community-contributed jurisdiction overlays.
+authors:
+  - name: "Community Goal contributors"
+repository-code: "https://github.com/caffeinated1/configurationRotBot"
+url: "https://caffeinated1.github.io/configurationRotBot/"
+license: CC-BY-4.0
+version: "1.0.0"
+date-released: "2026-09-08"
+references:
+  - type: generic
+    title: "A town's first data center: what to require before saying yes"
+    notes: >-
+      The source document this guide is adapted from, published on LinkedIn and
+      described by its post as produced with AI assistance from data center
+      contracts. It names no citations; every claim carried forward here ships
+      with a way to verify it locally instead.
+    authors:
+      - name: "Mark Cuban"
+    url: "https://lnkd.in/p/e-Pbqzrm"
+    year: 2026
+keywords:
+  - data centers
+  - land use
+  - local government
+  - zoning
+  - civic technology
+  - open data
+  - public participation

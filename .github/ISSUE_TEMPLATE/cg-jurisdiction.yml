@@ -1,0 +1,66 @@
+name: "Community Goal — add or update a jurisdiction"
+description: Attach the law that actually governs these requirements where you are.
+title: "[jurisdiction] "
+labels: ["community-goal", "jurisdiction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The requirements are portable; statutes are not. An overlay adds local
+        law to the shared requirements without changing them for anyone else.
+
+        If you would rather send a pull request directly, copy
+        `community-goal/data/jurisdictions/template.json` and edit it — this form
+        exists so you don't have to.
+  - type: input
+    id: place
+    attributes:
+      label: Jurisdiction
+      description: The place this covers.
+      placeholder: State of …, … County, Town of …
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Level
+      options: [national, state, province, county, municipality]
+    validations:
+      required: true
+  - type: input
+    id: maintainer
+    attributes:
+      label: Who will maintain it
+      description: >
+        A name or organisation, and a public contact. An overlay nobody maintains
+        goes stale silently, and stale law is worse than no law.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Local notes
+      description: >
+        One per requirement you can speak to, keyed by requirement id. Six good
+        notes beat seventy placeholders.
+      placeholder: |
+        s1-r5: Notice for rezoning is governed by … §… — publication 14 days, mailed notice within 500 ft. Defective notice voids the approval (… v …).
+        s4-r5: The provider's drought stages are named Advisory / Warning / Emergency; curtailment priority is set by Ordinance …
+        s7-r6: The large-load tariff docket is … and remains open; intervention deadline …
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Has anyone qualified reviewed this?
+      description: Nobody will think less of a draft. The site labels anything unreviewed.
+      options:
+        - "draft — not yet reviewed"
+        - "reviewed — checked by someone qualified in this jurisdiction"
+    validations:
+      required: true
+  - type: input
+    id: interest
+    attributes:
+      label: Material interest, if any
+      description: Per GOVERNANCE.md. Leave blank if none.

@@ -1,0 +1,220 @@
+[
+  {
+    "id": "ev-subsidy-per-job",
+    "headline": "About $1.95 million in subsidy per job",
+    "statement": "A watchdog analysis of eleven major data center projects found subsidies averaging about $1.95 million per job.",
+    "topic": "incentives",
+    "sections": [
+      "s8"
+    ],
+    "use": "Frames the cost-per-permanent-job question before any incentive is discussed.",
+    "verify": "Ask your state's economic development agency for project-level subsidy totals and permanent headcount for comparable facilities.",
+    "sources": []
+  },
+  {
+    "id": "ev-siting-factor",
+    "headline": "Only 3% named incentives as the biggest siting factor",
+    "statement": "In a survey of data center owners, only three percent named tax credits and local incentives as the biggest siting factor. Land and power availability drive the decision.",
+    "topic": "incentives",
+    "sections": [
+      "s8"
+    ],
+    "use": "Supports declining an incentive without believing the project will leave.",
+    "verify": "Check whether the applicant's own siting criteria, as filed or publicly described, mention incentives at all.",
+    "sources": []
+  },
+  {
+    "id": "ev-notice-voided",
+    "headline": "A rezoning voided over defective notice",
+    "statement": "In one Virginia county, the largest data center rezoning in the country was voided by a court for defective notice after roughly twenty-seven hours of hearings. The county spent more than $1.7 million defending it and then withdrew.",
+    "topic": "process",
+    "sections": [
+      "s1"
+    ],
+    "use": "Justifies written verification of statutory notice before every action requiring it.",
+    "verify": "Have counsel confirm your state's notice requirements and document compliance in the record each time.",
+    "sources": []
+  },
+  {
+    "id": "ev-zoned-too-close",
+    "headline": "The largest data center county says it zoned too close to homes",
+    "statement": "The chief economic development officer of the country's largest data center county has acknowledged publicly that officials would do it differently, and that facilities were zoned too close to homes.",
+    "topic": "siting",
+    "sections": [
+      "s2"
+    ],
+    "use": "The strongest available argument for separation distance over mitigation.",
+    "verify": "Compare your proposed setback to the setbacks that county now recommends, not the ones it adopted.",
+    "sources": []
+  },
+  {
+    "id": "ev-mitigation-litigation",
+    "headline": "Mitigation installed, litigation continued anyway",
+    "statement": "Where a well-resourced operator has installed acoustic mitigation in response to complaints, litigation over the same noise has continued anyway.",
+    "topic": "noise",
+    "sections": [
+      "s2",
+      "s5"
+    ],
+    "use": "Shows that a mitigation commitment is not equivalent to a distance requirement.",
+    "verify": "Ask the applicant for measured before-and-after data from any site where it has installed acoustic mitigation.",
+    "sources": []
+  },
+  {
+    "id": "ev-a-weighting",
+    "headline": "A-weighting discounts 63 Hz by 26.2 dB and 31.5 Hz by 39.4 dB",
+    "statement": "A-weighting, used in nearly every local ordinance, discounts 63 Hz by 26.2 dB and 31.5 Hz by 39.4 dB. Those are exactly the frequencies chillers and fan walls produce, and exactly the frequencies that pass through walls into bedrooms. A facility can pass a 55 dBA limit comfortably and still be unlivable next door. Content below 20 Hz may not register on standard equipment at all.",
+    "topic": "noise",
+    "sections": [
+      "s5"
+    ],
+    "use": "Explains why an existing local noise ordinance is not adequate protection here.",
+    "verify": "Have your acoustical engineer confirm the weighting curve in your current ordinance and the instrument class it implies.",
+    "sources": []
+  },
+  {
+    "id": "ev-noise-class-actions",
+    "headline": "Proposed class actions over sound carrying more than a mile",
+    "statement": "Noise is the most active area of data center litigation, including proposed class actions in Wisconsin and Mississippi alleging sound carrying more than a mile past the property line and, in one case, a proposed class exceeding ten thousand people.",
+    "topic": "noise",
+    "sections": [
+      "s5"
+    ],
+    "use": "Establishes the scale of post-approval exposure when noise standards are inadequate.",
+    "verify": "Ask counsel for the current status of data center noise litigation in your circuit.",
+    "sources": []
+  },
+  {
+    "id": "ev-self-generation",
+    "headline": "Dozens of unpermitted turbines, more than 500 MW self-supplied",
+    "statement": "One state enacted a law requiring large data centers to pay for the electrical infrastructure serving them and barring utilities from shifting those costs to other customers — and the same law permitted self-generation. The result at one campus was dozens of gas turbines running more than 500 megawatts of self-supplied load, in a community already carrying elevated health burdens, with the turbines unpermitted and litigation following.",
+    "topic": "generation",
+    "sections": [
+      "s6"
+    ],
+    "use": "The case for treating on-site generation as a first-order issue rather than an equipment detail.",
+    "verify": "Confirm which air permits your state requires for the specific units proposed, and at what aggregate capacity thresholds.",
+    "sources": []
+  },
+  {
+    "id": "ev-capacity-market",
+    "headline": "Capacity costs in one regional market rose by billions",
+    "statement": "Capacity market costs in one large regional market rose by billions with attributable bill impacts.",
+    "topic": "ratepayers",
+    "sections": [
+      "s7"
+    ],
+    "use": "One side of a genuinely mixed evidentiary record on ratepayer impact.",
+    "verify": "Pull your RTO's most recent capacity auction results and the state consumer advocate's analysis.",
+    "sources": []
+  },
+  {
+    "id": "ev-no-cost-shift",
+    "headline": "A study of the largest market found no historical cost shift",
+    "statement": "A study for the largest data center market in the world found no historical cost shift onto residential customers.",
+    "topic": "ratepayers",
+    "sections": [
+      "s7"
+    ],
+    "use": "The rebuttal your opponents will cite. Knowing it is why the risk-allocation framing is the safer argument.",
+    "verify": "Read the study's scope: historical cost allocation is a different question from forward-looking stranded-asset risk.",
+    "sources": []
+  },
+  {
+    "id": "ev-rate-drivers",
+    "headline": "Federal researchers attribute rising rates to equipment costs and an aging grid as well",
+    "statement": "Federal researchers attribute rising electricity rates to equipment costs and an aging grid as well as to load growth.",
+    "topic": "ratepayers",
+    "sections": [
+      "s7"
+    ],
+    "use": "Prevents overclaiming causation in public testimony.",
+    "verify": "Check your utility's most recent rate case filing for its own stated cost drivers.",
+    "sources": []
+  },
+  {
+    "id": "ev-incentive-returns",
+    "headline": "States lose 52 to 70 cents per dollar of data center sales tax exemption",
+    "statement": "Several states that measured returns found they lose between 52 and 70 cents per dollar spent on data center sales tax exemptions.",
+    "topic": "incentives",
+    "sections": [
+      "s8"
+    ],
+    "use": "The core fiscal argument against a local incentive.",
+    "verify": "Ask whether your state has ever published a return analysis on its data center exemption.",
+    "sources": []
+  },
+  {
+    "id": "ev-billion-dollar-states",
+    "headline": "Four states each losing more than a billion dollars a year",
+    "statement": "Four states are each losing more than a billion dollars a year on data center tax exemptions.",
+    "topic": "incentives",
+    "sections": [
+      "s8"
+    ],
+    "use": "Scale context for what a state-level exemption costs, separate from anything the town grants.",
+    "verify": "Request the annual forgone-revenue figure for your state's exemption from the department of revenue.",
+    "sources": []
+  },
+  {
+    "id": "ev-no-incentive-proceeded",
+    "headline": "Two of seven benchmark agreements gave no local incentive; both projects proceeded",
+    "statement": "Two of the seven signed agreements in the benchmark gave no local incentive at all, and both projects proceeded.",
+    "topic": "incentives",
+    "sections": [
+      "s8"
+    ],
+    "use": "Direct evidence that a local incentive is not a precondition to a project going forward.",
+    "verify": "Ask the applicant to identify any project it abandoned solely for lack of a local incentive.",
+    "sources": []
+  },
+  {
+    "id": "ev-no-decommissioning-security",
+    "headline": "None of seven signed agreements contained decommissioning security",
+    "statement": "None of the seven signed agreements reviewed for this guide contained decommissioning security. Not one. That is roughly 3,600 acres and 18 million square feet with no funded path to removal.",
+    "topic": "closure",
+    "sections": [
+      "s9",
+      "s10"
+    ],
+    "use": "The single most consistent gap in existing practice, and the easiest to close before approval.",
+    "verify": "Ask the applicant to produce any agreement it has signed anywhere that includes funded decommissioning.",
+    "sources": []
+  },
+  {
+    "id": "ev-sole-remedy",
+    "headline": "A sole-remedy clause turned a $20M protection into a $20M ceiling",
+    "statement": "One reviewed agreement made drawing the letter of credit the city's sole remedy, which turned a $20 million protection into a $20 million ceiling on a project costing roughly $10 billion.",
+    "topic": "security",
+    "sections": [
+      "s9"
+    ],
+    "use": "Why 'remedies are cumulative, not exclusive' is a provision worth fighting for.",
+    "verify": "Search any draft agreement for 'sole remedy', 'exclusive remedy', and 'liquidated damages' before signature.",
+    "sources": []
+  },
+  {
+    "id": "ev-equipment-life",
+    "headline": "Equipment obsolete in four to six years; the shell lasts thirty",
+    "statement": "The computing equipment inside these buildings is obsolete in roughly four to six years. The shell lasts thirty. Every agreement in the benchmark was written for a facility that underperforms; none was written for one that empties out.",
+    "topic": "closure",
+    "sections": [
+      "s10"
+    ],
+    "use": "The reason closure terms are written first rather than deferred.",
+    "verify": "Ask the applicant for its own refresh cycle assumptions and depreciation schedule.",
+    "sources": []
+  },
+  {
+    "id": "ev-construction-jobs",
+    "headline": "A thousand or more construction workers for two to three years",
+    "statement": "Construction is where the jobs actually are — a thousand or more workers for two to three years.",
+    "topic": "jobs",
+    "sections": [
+      "s8"
+    ],
+    "use": "Directs labor standards to the phase that actually carries employment.",
+    "verify": "Ask for the applicant's peak construction headcount projection and the permanent operating headcount, stated separately and in writing.",
+    "sources": []
+  }
+]

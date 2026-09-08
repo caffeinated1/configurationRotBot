@@ -1,0 +1,41 @@
+{
+  "id": "template",
+  "name": "Template — copy this file to start your jurisdiction",
+  "level": "template",
+  "status": "template",
+  "updated": "2026-09-08",
+  "summary": "A worked example of the overlay format, not a description of any real place. Copy this file to data/jurisdictions/<your-id>.json, replace every note with the statute, tariff, or ordinance that actually governs where you are, and open a pull request. Overlays add local context to the shared requirements; they never change or remove one.",
+  "maintainers": [
+    {
+      "name": "Your name or organisation",
+      "org": "Town, county, agency, NGO, or law school clinic",
+      "contact": "A public contact — an email alias, an issue thread, or a repository handle"
+    }
+  ],
+  "notes": {
+    "s1-r2": {
+      "note": "Replace with your state's authority for developer-funded review escrow, and any cap on what may be charged. Some states authorise this explicitly for major site plan review; others allow it only by agreement; a few do not permit it at all. Say which one applies here.",
+      "citation": "Cite the enabling statute or the appellate decision, with its section number."
+    },
+    "s1-r5": {
+      "note": "Replace with the notice statute that governs rezoning and conditional use hearings here: publication interval, mailed-notice radius, sign posting, and what a defective notice does to an approval.",
+      "citation": "Cite the statute and the leading case on defective notice in this state."
+    },
+    "s3-r2": {
+      "note": "Replace with how this state treats exactions and conditions on legislative approvals, and whether a development agreement is authorised by statute here at all.",
+      "citation": "Cite the development agreement enabling act, if one exists."
+    },
+    "s4-r5": {
+      "note": "Replace with the water provider's actual declared drought stages, by name, and the ordinance or tariff that assigns curtailment priority between industrial cooling and domestic service.",
+      "citation": "Cite the drought management plan and the section that sets the priority order."
+    },
+    "s7-r6": {
+      "note": "Replace with the docket number of this state's large-load tariff proceeding, whether it is open, and who may intervene without counsel.",
+      "citation": "Cite the commission docket and the intervention deadline."
+    },
+    "s9-r2": {
+      "note": "Replace with what financial security this jurisdiction may lawfully require, in what form, and whether decommissioning security for a non-energy use survives a challenge here.",
+      "citation": "Cite the statute or ordinance authorising the security."
+    }
+  }
+}
