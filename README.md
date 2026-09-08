@@ -321,33 +321,18 @@ Next up: JVM, Ruby and PHP detectors, per-workspace monorepo scoring, and
 Terraform and Kubernetes. Roadmap and open design questions are in
 [SPEC.md](SPEC.md#8-roadmap).
 
-## Also in this repository: Community Goal
+## Community Goal has moved
 
-[`community-goal/`](community-goal/README.md) is a separate deliverable that
-shares this repository's stdlib-only, no-dependency approach: an interactive
-site and open JSON API built from *"A town's first data center: what to require
-before saying yes"*, a document published by Mark Cuban on
-[LinkedIn](https://lnkd.in/p/e-Pbqzrm).
+Community Goal — an open requirements guide and JSON API for communities facing
+a first data center proposal — was built here and now lives in its own
+repository, where the people it is for can find it without navigating a
+developer tool:
 
-- **Site:** https://caffeinated1.github.io/configurationRotBot/
-- **API:** `api/v1/` — 10 sections, 71 requirements, 18 checkable claims, all
-  static JSON, no key and no rate limit.
+**https://github.com/caffeinated1/aidatacommunitygoal**
 
-It answers a different question than the scanner does — what a community should
-require before approving a data center, and how much of that is actually
-written down — but the shape is the same: data as the source of truth, a build
-that fails on a broken reference, and no runtime to keep alive.
-
-**It is open to contributors who are not developers**, which is most of the
-people who know this subject: town and county staff, planning boards, state
-agencies, consumer advocates, NGOs, law school clinics, engineers, and land use
-counsel. The two highest-leverage contributions are citing a claim (18 of 18
-carry no primary source, and coverage is published rather than hidden) and
-adding a jurisdiction overlay that attaches your local statutes to the
-requirements they govern. Issue forms cover both without touching JSON. See
-[`community-goal/CONTRIBUTING.md`](community-goal/CONTRIBUTING.md) and
-[`community-goal/GOVERNANCE.md`](community-goal/GOVERNANCE.md), which sets the
-conflict-of-interest rule everyone works under.
+Its history is still in this repository up to
+[#6](https://github.com/caffeinated1/configurationRotBot/pull/6). Issues,
+contributions, and the published site all belong to the new repository now.
 
 ## License
 
